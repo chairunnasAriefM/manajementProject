@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-  <img src="https://images.bisnis.com/upload/img/nyan%20cat%20dilelang.jpg" alt="banner" style="width: 100%; max-width: 800px;">
+  <img src="https://media.giphy.com/media/XUqcmSSeTUbupSeGA4/giphy.gif" alt="banner" style="width: 100%; max-width: 800px;">
 </div>
 
 ## Getting Started
