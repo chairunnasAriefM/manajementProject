@@ -68,7 +68,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('set null');
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
