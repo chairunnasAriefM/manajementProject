@@ -2,121 +2,159 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Register Form</title>
-
-    <!--Boxicons CDN-->
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-    <!--Custom CSS-->
-    <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}">
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <title>
+        Login
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="assets/css/soft-ui-dashboard.css?v=1.1.0" rel="stylesheet" />
+    <!-- Nepcha Analytics (nepcha.com) -->
+    <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+    <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 </head>
 
-<body>
-    <div class="wrapper">
-        <span class="rotate-bg"></span>
-        <span class="rotate-bg2"></span>
+<body class="">
+    <main class="main-content  mt-0">
+        <section>
+            <div class="page-header min-vh-75">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+                            <div class="card card-plain mt-8">
+                                <div class="card-header pb-0 text-left bg-transparent">
+                                    <h3 class="font-weight-bolder text-info text-gradient">Selamat Datang Kembali</h3>
+                                    <p class="mb-0">Masukkan email dan password untuk masuk</p>
+                                </div>
+                                <div class="card-body">
+                                    <form role="form" method="POST" action="{{ route('login.post') }}">
+                                        @csrf
+                                        <label>Email</label>
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control" placeholder="Email"
+                                                aria-label="Email" aria-describedby="email-addon" name="email"
+                                                required>
+                                        </div>
+                                        <label>Password</label>
+                                        <div class="mb-3">
+                                            <input type="password" class="form-control" placeholder="Password"
+                                                aria-label="Password" aria-describedby="password-addon" name="password"
+                                                required>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe"
+                                                name="remember">
+                                            <label class="form-check-label" for="rememberMe">Ingat saya</label>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit"
+                                                class="btn bg-gradient-info w-100 mt-4 mb-0">Masuk</button>
+                                        </div>
+                                    </form>
 
-        <!-- Form Login -->
-        <div class="form-box login">
-            <h2 class="title animation" style="--i:0; --j:21">Login</h2>
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-                <div class="input-box animation" style="--i:1; --j:22">
-                    <input type="text" name="username" value="{{ old('username') }}" required>
-                    <label for="">Username</label>
-                    <i class='bx bxs-user'></i>
-                    @error('username')
-                        <small style="color: red">{{ $message }}</small>
-                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+                                    style="background-image:url('assets/img/curved-images/curved6.jpg')"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="input-box animation" style="--i:2; --j:23">
-                    <input type="password" name="password" required>
-                    <label for="">Password</label>
-                    <i class='bx bxs-lock-alt'></i>
-                    @error('password')
-                        <small style="color: red">{{ $message }}</small>
-                    @enderror
+            </div>
+        </section>
+    </main>
+    <!-- -------- START FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+    <footer class="footer py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mb-4 mx-auto text-center">
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
+                        About Us
+                    </a>
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
+                        Team
+                    </a>
                 </div>
-
-                <!-- Checkbox hanya di login -->
-                <div>
-                    <label>
-                        <input type="checkbox" name="remember"> Remember Me
-                    </label>
+                <div class="col-lg-8 mx-auto text-center mb-4 mt-2">
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-4 me-4">
+                        <span class="text-lg fab fa-dribbble"></span>
+                    </a>
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-4 me-4">
+                        <span class="text-lg fab fa-twitter"></span>
+                    </a>
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-4 me-4">
+                        <span class="text-lg fab fa-instagram"></span>
+                    </a>
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-4 me-4">
+                        <span class="text-lg fab fa-pinterest"></span>
+                    </a>
+                    <a href="javascript:;" target="_blank" class="text-secondary me-xl-4 me-4">
+                        <span class="text-lg fab fa-github"></span>
+                    </a>
                 </div>
-
-                <button type="submit" class="btn animation" style="--i:3; --j:24">Login</button>
-
-                <div class="linkTxt animation" style="--i:5; --j:25">
-                    <p>Don't have an account? <a href="#" class="register-link">Sign Up</a></p>
+            </div>
+            <div class="row">
+                <div class="col-8 mx-auto text-center mt-1">
+                    <p class="mb-0 text-secondary">
+                        Copyright ©
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script> Soft by Creative Tim.
+                    </p>
                 </div>
-            </form>
+            </div>
         </div>
+    </footer>
+    <!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+    <!--   Core JS Files   -->
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="assets/js/soft-ui-dashboard.min.js?v=1.1.0"></script>
 
-        <!-- Form Register -->
-        <div class="form-box register">
-            <h2 class="title animation" style="--i:17; --j:0">Sign Up</h2>
-            <form method="POST" action="{{ route('register.post') }}">
-                @csrf
-                <div class="input-box animation" style="--i:18; --j:1">
-                    <input type="text" name="username" value="{{ old('username') }}" required>
-                    <label for="">Username</label>
-                    <i class='bx bxs-user'></i>
-                    @error('username')
-                        <small style="color: red">{{ $message }}</small>
-                    @enderror
-                </div>
+    <!-- SweetAlert2 Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                <div class="input-box animation" style="--i:19; --j:2">
-                    <input type="email" name="email" value="{{ old('email') }}" required>
-                    <label for="">Email</label>
-                    <i class='bx bxs-envelope'></i>
-                    @error('email')
-                        <small style="color: red">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="input-box animation" style="--i:20; --j:3">
-                    <input type="password" name="password" required>
-                    <label for="">Password</label>
-                    <i class='bx bxs-lock-alt'></i>
-                    @error('password')
-                        <small style="color: red">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="input-box animation">
-                    <input type="password" name="password_confirmation" required>
-                    <label for="">Confirm Password</label>
-                </div>
-
-                <button type="submit" class="btn animation" style="--i:21;--j:4">Sign Up</button>
-
-                <div class="linkTxt animation" style="--i:22; --j:5">
-                    <p>Already have an account? <a href="#" class="login-link">Login</a></p>
-                </div>
-            </form>
-        </div>
-
-
-        <!-- Info Section -->
-        <div class="info-text login">
-            <h2 class="animation" style="--i:0; --j:20">Welcome Back!</h2>
-            <p class="animation" style="--i:1; --j:21">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-        </div>
-
-        <div class="info-text register">
-            <h2 class="animation" style="--i:17; --j:0;">Welcome Back!</h2>
-            <p class="animation" style="--i:18; --j:1;">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-        </div>
-    </div>
-
-    <!-- Custom JavaScript -->
-    <script src="{{ asset('assets/js/auth.js') }}"></script>
+    <script>
+        @if (session('logout_success'))
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: '{{ session('logout_success') }}',
+                showConfirmButton: false,
+                toast: true,
+                timer: 3000,
+                didOpen: (toast) => {
+                    toast.style.backgroundColor = '#28a745'; // Ganti warna jika perlu
+                }
+            });
+        @endif
+    </script>
 </body>
 
 </html>

@@ -26,7 +26,6 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -46,18 +45,18 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
         $remember = $request->has('remember');
 
-        if (Auth::attempt(['username' => $request->username, 'password' => $request->password], $remember)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
             // Set cookie jika remember me dipilih
             if ($remember) {
-                Cookie::queue('username', $request->username, 60 * 24 * 30); // 30 hari
+                Cookie::queue('email', $request->email, 60 * 24 * 30); // 30 hari
             }
-            return redirect('/')->with('success', 'Login successful!');
+            return redirect('/dashboard')->with('success', 'Login successful!');
         }
 
         return back()->withErrors(['login' => 'Invalid credentials'])->withInput();
@@ -69,6 +68,6 @@ class AuthController extends Controller
         Auth::logout();
         Cookie::queue(Cookie::forget('username'));
 
-        return redirect('/')->with('success', 'Logged out successfully!');
+        return redirect('/')->with('logout_success', 'Logout Berhasil!');
     }
 }
