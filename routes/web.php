@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -12,14 +13,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tes', function () {
         return view('layouts.main');
     });
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
 });
 
 
 
 Route::middleware([AdminMiddleware::class])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
+
+
+    // manage user
+    Route::get('/showuser', [AdminController::class, 'showUser'])->name('showuser');
+    Route::get('/addnewuser', [AdminController::class, 'showAddnewUserForm'])->name('addnewuser');
+    Route::post('/addnewuser', [AdminController::class, 'addNewUser'])->name('addnewuser.post');
+    Route::delete('/deleteuser/{id}', [AdminController::class, 'destroyUser'])->name('admin.delete');
+    Route::post('/edituser', [AdminController::class, 'addNewUser'])->name('admin.edit');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

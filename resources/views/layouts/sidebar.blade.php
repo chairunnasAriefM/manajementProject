@@ -1,9 +1,9 @@
 <div id="sidebar">
     <div class="sidebar-wrapper active">
         <div class="sidebar-header position-relative">
-            <div class="d-flex justify-content-between align-items-center"">
+            <div class="d-flex justify-content-between align-items-center">
                 <div class="logo" style="margin-bottom: -60px;">
-                    <a href="index.html">
+                    <a href="{{ asset('assets/img/favicon.png') }}" target="blank">
                         <img src="{{ asset('assets/img/favicon.png') }}" alt="Logo"
                             style="width: 150px; height: auto;">
                     </a>
@@ -47,14 +47,13 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item active ">
-                    <a href="index.html" class='sidebar-link'>
+                <li class="sidebar-item {{ Request::is('dashboard*') ? 'active' : '' }}">
+                    <a href="/dashboard" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
-
-
                 </li>
+
 
                 {{-- <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -103,67 +102,33 @@
                     </a>
                 </li>
 
-                <li class="sidebar-title">Tentang Akun</li>
+                @if (Auth::user()->role == 'admin')
+                    <li class="sidebar-title">Pengelolaan Akun</li>
 
-                {{-- <li class="sidebar-item  ">
-                    <a href="javascript:void(0)" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-medical-fill"></i>
-                        <span>Form Layout</span>
-                    </a>
-                </li> --}}
+                    <li class="sidebar-item {{ Request::is('showuser*') ? 'active' : '' }}">
+                        <a href="showuser" class='sidebar-link'>
+                            <i class="bi bi-people-fill"></i>
+                            <span>Data User</span>
+                        </a>
+                    </li>
 
-                <li class="sidebar-item">
-                    <a href="javascript:void(0);" id="logoutButton" class="sidebar-link bg-danger text-light">
-                        <i class="bi bi-box-arrow-left text-light"></i>
-                        <span>Logout</span>
-                    </a>
-                </li>
+                    <li class="sidebar-item {{ Request::is('addnewuser*') ? 'active' : '' }}">
+                        <a href="addnewuser" class='sidebar-link'>
+                            <i class="bi bi-person-fill-add"></i>
+                            <span>Tambah User</span>
+                        </a>
+                    </li>
 
+                    <li class="sidebar-item">
+                        <a href="" class='sidebar-link'>
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>Edit User</span>
+                        </a>
+                    </li>
+                @endif
 
 
             </ul>
         </div>
     </div>
 </div>
-
-
-<script>
-    document.getElementById('logoutButton').addEventListener('click', function() {
-        // Menampilkan SweetAlert2 untuk konfirmasi logout
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Anda akan keluar dari aplikasi!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Logout!',
-            cancelButtonText: 'Batal',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika pengguna memilih "Ya, Logout!", kirimkan logout request menggunakan fetch API
-                fetch('{{ route('logout') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Menambahkan CSRF token untuk keamanan
-                        },
-                        body: JSON
-                            .stringify({}) // Bisa kirim data kosong, karena hanya memerlukan POST
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            // Jika logout berhasil, arahkan pengguna ke halaman login atau home
-                            window.location.href =
-                                '{{ route('login') }}'; // Ganti dengan route login jika ada
-                        } else {
-                            // Menangani kesalahan jika ada masalah
-                            Swal.fire('Terjadi kesalahan!', 'Logout gagal.', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire('Terjadi kesalahan!', 'Tidak dapat menghubungi server.', 'error');
-                    });
-            }
-        });
-    });
-</script>
