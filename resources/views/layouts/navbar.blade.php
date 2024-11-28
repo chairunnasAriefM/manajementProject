@@ -81,7 +81,7 @@
                         <li>
 
                             <a class="dropdown-item" href="javascript:void(0)" id="logoutButton"
-                                style="text-decoration: none; transition: background-color 0.3s, color 0.3s;"
+                                style=""
                                 onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='white';"
                                 onmouseout="this.style.backgroundColor='transparent'; this.style.color='black';">
                                 <i class="icon-mid bi bi-box-arrow-left me-2"></i>

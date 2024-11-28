@@ -29,7 +29,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/addnewuser', [AdminController::class, 'showAddnewUserForm'])->name('addnewuser');
     Route::post('/addnewuser', [AdminController::class, 'addNewUser'])->name('addnewuser.post');
     Route::delete('/deleteuser/{id}', [AdminController::class, 'destroyUser'])->name('admin.delete');
-    Route::post('/edituser', [AdminController::class, 'addNewUser'])->name('admin.edit');
+    Route::put('/updateuser/{id}', [AdminController::class, 'updateUser'])->name('updateuser');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

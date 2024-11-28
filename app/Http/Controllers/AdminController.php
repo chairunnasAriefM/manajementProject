@@ -37,7 +37,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:admin,member',
+            'role' => 'required|in:admin,leader,programmer,3dArtist,music composer,2dArtist,member',
         ]);
 
         User::create([
@@ -66,5 +66,23 @@ class AdminController extends Controller
                 'message' => 'Gagal menghapus data: ' . $e->getMessage(),
             ]);
         }
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id, // Ignore the current user's email
+            'role' => 'required|in:admin,leader,programmer,3dArtist,music composer,2dArtist,member',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'User updated successfully!']);
     }
 }

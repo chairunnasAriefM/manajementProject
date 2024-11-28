@@ -56,11 +56,86 @@
                                                             <i class="bi bi-eye "></i>
                                                         </button>
 
-                                                        <a href="{{ route('admin.edit', $user->id) }}"
-                                                            class="btn btn-sm btn-warning me-2" data-bs-toggle="tooltip"
+                                                        <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
+                                                            data-bs-target="#editUserModal{{ $user->id }}"
                                                             data-bs-placement="top" title="Edit">
                                                             <i class="bi bi-pencil-square"></i>
-                                                        </a>
+                                                        </button>
+
+                                                        <!-- Modal untuk Edit User -->
+                                                        <div class="modal fade" id="editUserModal{{ $user->id }}"
+                                                            tabindex="-1" aria-labelledby="editUserModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <form id="editUserForm{{ $user->id }}"
+                                                                        onsubmit="updateUser(event, {{ $user->id }})">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="editUserModalLabel">
+                                                                                Edit User: {{ $user->name }}</h5>
+                                                                            <button type="button" class="btn-close"
+                                                                                data-bs-dismiss="modal"
+                                                                                aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="name-{{ $user->id }}">Name</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="name-{{ $user->id }}"
+                                                                                    name="name"
+                                                                                    value="{{ $user->name }}" required>
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="email-{{ $user->id }}">Email</label>
+                                                                                <input type="email" class="form-control"
+                                                                                    id="email-{{ $user->id }}"
+                                                                                    name="email"
+                                                                                    value="{{ $user->email }}" required>
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="role-{{ $user->id }}">Role</label>
+                                                                                <select class="form-select"
+                                                                                    id="role-{{ $user->id }}"
+                                                                                    name="role" required>
+                                                                                    <option value="admin"
+                                                                                        {{ $user->role == 'admin' ? 'selected' : '' }}>
+                                                                                        Admin</option>
+                                                                                    <option value="member"
+                                                                                        {{ $user->role == 'member' ? 'selected' : '' }}>
+                                                                                        Member</option>
+                                                                                    <option value="leader"
+                                                                                        {{ $user->role == 'leader' ? 'selected' : '' }}>
+                                                                                        Leader</option>
+                                                                                    <option value="programmer"
+                                                                                        {{ $user->role == 'programmer' ? 'selected' : '' }}>
+                                                                                        Programmer</option>
+                                                                                    <option value="3dArtist"
+                                                                                        {{ $user->role == '3dArtist' ? 'selected' : '' }}>
+                                                                                        3D Artist</option>
+                                                                                    <option value="2dArtist"
+                                                                                        {{ $user->role == '2dArtist' ? 'selected' : '' }}>
+                                                                                        2D Artist</option>
+                                                                                    <option value="music composer"
+                                                                                        {{ $user->role == 'music composer' ? 'selected' : '' }}>
+                                                                                        Music Composer</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">Close</button>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary">Save
+                                                                                Changes</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
 
                                                         <button type="button" class="btn btn-sm btn-danger"
                                                             onclick="deleteUser({{ $user->id }})"
@@ -78,8 +153,8 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="userModalLabel">User Details:
                                                                 {{ $user->name }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <ul>
@@ -99,6 +174,9 @@
                                             </div>
                                         @endforeach
                                     @endif
+
+
+
                                 </tbody>
                             </table>
 
@@ -173,6 +251,67 @@
                     });
                 }
             });
+        }
+
+        function updateUser(event, userId) {
+            event.preventDefault();
+
+            const form = document.querySelector(`#editUserForm${userId}`);
+            const name = document.querySelector(`#name-${userId}`).value;
+            const email = document.querySelector(`#email-${userId}`).value;
+            const role = document.querySelector(`#role-${userId}`).value;
+
+            fetch(`/updateuser/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        role
+                    }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Updated',
+                            text: data.message,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        });
+
+                        // Update table data dynamically
+                        const userRow = document.querySelector(`#user-${userId}`);
+                        userRow.querySelector('td:nth-child(1)').textContent = name;
+                        userRow.querySelector('td:nth-child(2)').textContent = email;
+                        userRow.querySelector('td:nth-child(3) span').textContent = role.charAt(0).toUpperCase() + role
+                            .slice(1);
+
+                        // Close modal
+                        const modal = bootstrap.Modal.getInstance(document.querySelector(`#editUserModal${userId}`));
+                        modal.hide();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to update user!',
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong!',
+                    });
+                });
         }
     </script>
 @endsection
