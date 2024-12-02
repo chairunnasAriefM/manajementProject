@@ -1,0 +1,269 @@
+@extends('layouts.main')
+
+@section('title', 'Manage Projects')
+
+@section('content')
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="card-title mb-0">Project Management</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-responsive p-3">
+                            <!-- Form Pencarian -->
+                            <form action="{{ route('projects.index') }}" method="GET" class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari proyek..."
+                                        value="{{ request('search') }}">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </div>
+                            </form>
+
+                            <table class="table table-hover align-middle">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>JUDUL</th>
+                                        <th>DESKRIPSI</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($projects->isEmpty())
+                                        <tr>
+                                            <td colspan="6" class="text-center">Data Tidak Ditemukan</td>
+                                        </tr>
+                                    @else
+                                        @foreach ($projects as $project)
+                                            <tr id="project-{{ $project->id }}">
+                                                <td class="text-bold-500">{{ $project->title }}</td>
+                                                <td>{{ $project->description }}</td>
+                                                <td>{{ $project->start_date }}</td>
+                                                <td>{{ $project->end_date }}</td>
+                                                <td>
+                                                    <span
+                                                        class="badge {{ $project->status == 'completed' ? 'bg-success' : ($project->status == 'in_progress' ? 'bg-warning' : 'bg-secondary') }}">
+                                                        {{ ucfirst(str_replace('_', ' ', $project->status)) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <!-- Show Modal -->
+                                                        <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal"
+                                                            data-bs-target="#projectModal{{ $project->id }}">
+                                                            <i class="bi bi-eye"></i>
+                                                        </button>
+
+                                                        <!-- Edit Modal -->
+                                                        <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
+                                                            data-bs-target="#editProjectModal{{ $project->id }}">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </button>
+
+                                                        <!-- Edit Project Modal -->
+                                                        <div class="modal fade" id="editProjectModal{{ $project->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="editProjectLabel{{ $project->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <form id="editProjectForm{{ $project->id }}"
+                                                                        onsubmit="updateProject(event, {{ $project->id }})">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title"
+                                                                                id="editProjectLabel{{ $project->id }}">
+                                                                                Edit Project: {{ $project->title }}</h5>
+                                                                            <button type="button" class="btn-close"
+                                                                                data-bs-dismiss="modal"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="title-{{ $project->id }}">Title</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="title-{{ $project->id }}"
+                                                                                    name="title"
+                                                                                    value="{{ $project->title }}" required>
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="description-{{ $project->id }}">Description</label>
+                                                                                <textarea class="form-control" id="description-{{ $project->id }}" name="description">{{ $project->description }}</textarea>
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="start_date-{{ $project->id }}">Start
+                                                                                    Date</label>
+                                                                                <input type="date" class="form-control"
+                                                                                    id="start_date-{{ $project->id }}"
+                                                                                    name="start_date"
+                                                                                    value="{{ $project->start_date }}"
+                                                                                    required>
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="end_date-{{ $project->id }}">End
+                                                                                    Date</label>
+                                                                                <input type="date" class="form-control"
+                                                                                    id="end_date-{{ $project->id }}"
+                                                                                    name="end_date"
+                                                                                    value="{{ $project->end_date }}"
+                                                                                    required>
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="status-{{ $project->id }}">Status</label>
+                                                                                <select class="form-select"
+                                                                                    id="status-{{ $project->id }}"
+                                                                                    name="status" required>
+                                                                                    <option value="in_progress"
+                                                                                        {{ $project->status == 'in_progress' ? 'selected' : '' }}>
+                                                                                        In Progress</option>
+                                                                                    <option value="completed"
+                                                                                        {{ $project->status == 'completed' ? 'selected' : '' }}>
+                                                                                        Completed</option>
+                                                                                    <option value="on_hold"
+                                                                                        {{ $project->status == 'on_hold' ? 'selected' : '' }}>
+                                                                                        On Hold</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">Close</button>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary">Save
+                                                                                Changes</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <button class="btn btn-sm btn-danger"
+                                                            onclick="deleteProject({{ $project->id }})">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <div class="modal fade" id="projectModal{{ $project->id }}" tabindex="-1"
+                                                aria-labelledby="projectModalLabel{{ $project->id }}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                    <div class="modal-content border-0 shadow-lg">
+                                                        <div class="modal-header bg-primary text-white">
+                                                            <h5 class="modal-title text-white"
+                                                                id="projectModalLabel{{ $project->id }}">
+                                                                <i class="bi bi-info-circle"></i> Project Details:
+                                                                {{ $project->title }}
+                                                            </h5>
+                                                            <button type="button" class="btn-close btn-close-white"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <h6><i
+                                                                            class="bi bi-bookmark-fill text-primary me-2"></i><strong>Title:</strong>
+                                                                    </h6>
+                                                                    <p>{{ $project->title }}</p>
+                                                                    <h6><i
+                                                                            class="bi bi-file-earmark-text-fill text-primary me-2"></i><strong>Description:</strong>
+                                                                    </h6>
+                                                                    <p>{{ $project->description }}</p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h6><i
+                                                                            class="bi bi-calendar-event-fill text-primary me-2"></i><strong>Start
+                                                                            Date:</strong></h6>
+                                                                    <p>{{ $project->start_date }}</p>
+                                                                    <h6><i
+                                                                            class="bi bi-calendar-check-fill text-primary me-2"></i><strong>End
+                                                                            Date:</strong></h6>
+                                                                    <p>{{ $project->end_date }}</p>
+                                                                    <h6><i
+                                                                            class="bi bi-flag-fill text-primary me-2"></i><strong>Status:</strong>
+                                                                    </h6>
+                                                                    <span
+                                                                        class="badge {{ $project->status == 'completed' ? 'bg-success' : ($project->status == 'in_progress' ? 'bg-warning' : 'bg-secondary') }}">
+                                                                        {{ ucfirst(str_replace('_', ' ', $project->status)) }}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                            <div class="pagination-container">
+                                {{ $projects->links() }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection
+
+@section('scripts')
+    <script>
+        function deleteProject(projectId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/projects/${projectId}`,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            $(`#project-${projectId}`).remove();
+                        },
+                        error: function() {
+                            Swal.fire('Error', 'Failed to delete project!', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function updateProject(event, projectId) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById(`editProjectForm${projectId}`));
+            $.ajax({
+                url: `/projects/${projectId}`,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-HTTP-Method-Override': 'PUT'
+                },
+                success: function(response) {
+                    Swal.fire('Updated!', response.message, 'success');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    Swal.fire('Error', 'Failed to update project! ' + xhr.responseJSON.message, 'error');
+                }
+            });
+        }
+    </script>
+@endsection

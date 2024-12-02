@@ -11,21 +11,23 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data['tes'] = Project::all();
+        $search = $request->input('search');
+        $projects = Project::when($search, function ($query, $search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        })->paginate(10);
 
-        if ($data == null) {
-            return response()->json(['message' => 'data masih kosong']);
-        }
-
-        return response()->json($data);
+        return view('leader.manage_projects.showProjects', compact('projects'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create() {}
+    public function create()
+    {
+        return view('leader.manage_projects.addProject');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -37,7 +39,7 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'status' => 'required|in:in_progress,completed,on_hold',
+            // 'status' => 'required|in:in_progress,completed,on_hold',
         ]);
 
         Project::create([
@@ -45,13 +47,13 @@ class ProjectController extends Controller
             'description' => $request->description,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'status' => $request->status,
+            'status' => 'in_progress',
             'created_by' => Auth::id(),
-
         ]);
 
-        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
+        return redirect()->route('projects.create')->with('success', 'Proyek Berhasil dibuat!');
     }
+
 
     /**
      * Display the specified resource.
@@ -64,17 +66,14 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Project $project)
-    {
-
-    }
+    public function edit(Request $request, Project $project) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData =  $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'start_date' => 'nullable|date',
@@ -82,24 +81,20 @@ class ProjectController extends Controller
             'status' => 'required|in:in_progress,completed,on_hold',
         ]);
 
-        $project->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'status' => $request->status,
-        ]);
+        $project = Project::findOrFail($id);
+        $project->update($validatedData);
 
-        return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
+        return response()->json(['success' => true, 'message' => 'Proyek Berhasil dihapus!']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy($id)
     {
+        $project = Project::findOrFail($id);
         $project->delete();
-        return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
 
+        return response()->json(['success' => true, 'message' => 'Proyek Berhasil dihapus!']);
     }
 }

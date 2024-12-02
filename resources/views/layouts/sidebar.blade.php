@@ -93,14 +93,25 @@
 
                 </li> --}}
 
-                <li class="sidebar-title">Forms &amp; Tables</li>
+                @if (Auth::user()->role == 'leader')
+                    <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
+                        <a href="/projects/create" class='sidebar-link'>
+                            <i class="bi bi-folder-plus"></i>
+                            <span>Tambah Project</span>
+                        </a>
+                    </li>
+                @endif
 
-                <li class="sidebar-item  ">
-                    <a href="form-layout.html" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-medical-fill"></i>
-                        <span>Form Layout</span>
-                    </a>
-                </li>
+                @if (Auth::user()->role !== 'admin')
+                    <li class="sidebar-title">Projects</li>
+
+                    <li class="sidebar-item ">
+                        <a href="form-layout.html" class='sidebar-link'>
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>Tambah Project</span>
+                        </a>
+                    </li>
+                @endif
 
                 @if (Auth::user()->role == 'admin')
                     <li class="sidebar-title">Pengelolaan Akun</li>
@@ -116,6 +127,13 @@
                         <a href="addnewuser" class='sidebar-link'>
                             <i class="bi bi-person-fill-add"></i>
                             <span>Tambah User</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {{ Request::is('projects') ? 'active' : '' }}">
+                        <a href="projects" class='sidebar-link'>
+                            <i class="bi bi-folder"></i>
+                            <span>Data Project</span>
                         </a>
                     </li>
                 @endif

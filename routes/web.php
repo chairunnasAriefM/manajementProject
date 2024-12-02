@@ -33,6 +33,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/addnewuser', [AdminController::class, 'addNewUser'])->name('addnewuser.post');
     Route::delete('/deleteuser/{id}', [AdminController::class, 'destroyUser'])->name('admin.delete');
     Route::put('/updateuser/{id}', [AdminController::class, 'updateUser'])->name('updateuser');
+
+    // manage Project
+    Route::resource('projects', ProjectController::class)->except(['create','show','edit']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
