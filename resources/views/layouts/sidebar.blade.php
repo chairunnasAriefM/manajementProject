@@ -109,6 +109,15 @@
                     </li>
                 @endif
 
+                @if (Auth::user()->role !== 'leader' && Auth::user()->role !== 'admin')
+                    <li class="sidebar-item {{ Request::is('showProjectsCommon') ? 'active' : '' }}">
+                        <a href="{{ route('showProjectsCommon') }}" class='sidebar-link'>
+                            <i class="bi bi-folder2-open"></i>
+                            <span>List Project Saya</span>
+                        </a>
+                    </li>
+                @endif
+
                 @if (Auth::user()->role !== 'admin')
                     <li class="sidebar-title">Proyek Saya</li>
 

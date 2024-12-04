@@ -158,4 +158,24 @@ class ProjectController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Anggota berhasil dihapus dari proyek']);
     }
+
+    public function other(Request $request)
+    {
+        $userId = Auth::id();
+
+        $search = $request->input('search');
+        $projects = Project::with('members')
+            ->when($search, function ($query, $search) {
+                return $query->where('title', 'like', '%' . $search . '%');
+            })
+            ->whereHas('members', function ($query) use ($userId) {
+                $query->where('users.id', $userId);  // Tentukan nama tabel untuk kolom id
+        })
+            ->paginate(10);
+
+        // Dapatkan data pengguna (jika diperlukan di view)
+        $users = User::all();
+
+        return view('common.Projects.list_projects', compact('projects', 'users'));
+    }
 }

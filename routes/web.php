@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('projects', ProjectController::class);
     Route::get('/showProjects', [ProjectController::class, 'perLeader'])->name('showProjects');
     Route::post('/project/{projectId}/remove-member', [ProjectController::class, 'removeMember']);
+    Route::get('/showProjectsCommon', [ProjectController::class, 'other'])->name('showProjectsCommon');
 
 });
 
