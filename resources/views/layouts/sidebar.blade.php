@@ -100,16 +100,39 @@
                             <span>Tambah Project</span>
                         </a>
                     </li>
+
+                    <li class="sidebar-item {{ Request::is('showProjects') ? 'active' : '' }}">
+                        <a href="{{ route('showProjects') }}" class='sidebar-link'>
+                            <i class="bi bi-folder2-open"></i>
+                            <span>List Project Saya</span>
+                        </a>
+                    </li>
                 @endif
 
                 @if (Auth::user()->role !== 'admin')
-                    <li class="sidebar-title">Projects</li>
+                    <li class="sidebar-title">Proyek Saya</li>
 
-                    <li class="sidebar-item ">
-                        <a href="form-layout.html" class='sidebar-link'>
-                            <i class="bi bi-file-earmark-medical-fill"></i>
-                            <span>Tambah Project</span>
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-map-fill"></i>
+                            <span>Projects 1</span>
                         </a>
+
+                        <ul class="submenu ">
+
+                            <li class="submenu-item  ">
+                                <a href="ui-map-google-map.html" class="submenu-link">Tugas 1</a>
+
+                            </li>
+
+                            <li class="submenu-item  ">
+                                <a href="ui-map-jsvectormap.html" class="submenu-link">Tugas 2</a>
+
+                            </li>
+
+                        </ul>
+
+
                     </li>
                 @endif
 

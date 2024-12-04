@@ -14,4 +14,12 @@ class Project extends Model
         'status',
         'created_by',
     ];
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'project_members', 'project_id', 'user_id');
+    }
+
+
+
 }

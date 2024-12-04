@@ -20,6 +20,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('projects', ProjectController::class);
+    Route::get('/showProjects', [ProjectController::class, 'perLeader'])->name('showProjects');
+    Route::post('/project/{projectId}/remove-member', [ProjectController::class, 'removeMember']);
+
 });
 
 
@@ -35,7 +38,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::put('/updateuser/{id}', [AdminController::class, 'updateUser'])->name('updateuser');
 
     // manage Project
-    Route::resource('projects', ProjectController::class)->except(['create','show','edit']);
+    // Route::resource('projects', ProjectController::class)->except(['create','show','edit']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

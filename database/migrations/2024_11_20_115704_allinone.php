@@ -42,7 +42,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            // $table->enum('role', ['leader', 'developer', 'designer']);
             $table->timestamps();
 
             $table->foreign('project_id')->references('id')->on('projects');

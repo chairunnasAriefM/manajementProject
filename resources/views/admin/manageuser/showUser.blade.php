@@ -146,32 +146,7 @@
                                                 </td>
                                             </tr>
 
-                                            <div class="modal fade" id="userModal{{ $user->id }}" tabindex="-1"
-                                                aria-labelledby="userModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="userModalLabel">User Details:
-                                                                {{ $user->name }}</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <ul>
-                                                                <li><strong>Name:</strong> {{ $user->name }}</li>
-                                                                <li><strong>Email:</strong> {{ $user->email }}</li>
-                                                                <li><strong>Role:</strong> {{ ucfirst($user->role) }}</li>
-                                                                <li><strong>Created At:</strong>
-                                                                    {{ $user->created_at->format('d M Y H:i') }}</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           
                                         @endforeach
                                     @endif
 

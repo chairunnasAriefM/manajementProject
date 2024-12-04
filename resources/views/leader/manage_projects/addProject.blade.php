@@ -62,6 +62,22 @@
                         </div>
                     </div>
 
+                    <!-- Tambah Anggota Proyek -->
+
+                    <div class="form-group">
+                        <label for="members" class="form-label fw-bold">Anggota Proyek</label>
+                        <select class="choices form-select multiple-remove" id="members" name="members[]"
+                            multiple="multiple" required>
+                            <optgroup label="Anggota">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->role }})</option>
+                                @endforeach
+                            </optgroup>
+                        </select>
+                    </div>
+
+
+
                     <!-- Tombol Submit -->
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg">Simpan Proyek</button>
