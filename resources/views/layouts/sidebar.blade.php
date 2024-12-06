@@ -121,28 +121,27 @@
                 @if (Auth::user()->role !== 'admin')
                     <li class="sidebar-title">Proyek Saya</li>
 
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-map-fill"></i>
-                            <span>Projects 1</span>
-                        </a>
+                    @php
+                        $projects = \App\Models\Project::where('created_by', Auth::id())->with('tasks')->get();
+                    @endphp
 
-                        <ul class="submenu ">
+                    @foreach ($projects as $project)
+                        <li class="sidebar-item has-sub">
+                            <a href="#" class="sidebar-link">
+                                <i class="bi bi-folder-fill"></i>
+                                <span>{{ $project->title }}</span>
+                            </a>
 
-                            <li class="submenu-item  ">
-                                <a href="ui-map-google-map.html" class="submenu-link">Tugas 1</a>
-
-                            </li>
-
-                            <li class="submenu-item  ">
-                                <a href="ui-map-jsvectormap.html" class="submenu-link">Tugas 2</a>
-
-                            </li>
-
-                        </ul>
-
-
-                    </li>
+                            <!-- Tugas-tugas dalam proyek -->
+                            <ul class="submenu">
+                                @foreach ($project->tasks as $task)
+                                    <li class="submenu-item">
+                                        <a href="#" class="submenu-link">{{ $task->title }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    @endforeach
                 @endif
 
                 @if (Auth::user()->role == 'admin')

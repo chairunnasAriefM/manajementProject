@@ -18,17 +18,27 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $requestData = $request->validate([
+            'project_id' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|email|max:255',
+            'assigned_to' => 'required|exists:users,id',
+            'due_date' => 'required|date',
+            'status' => 'required|in:in_progress,completed,on_hold',
+        ]);
+
+        $task = new Task();
+        $task->fill($requestData);
+        $task->save();
+
+        return redirect('/addnewuser')->with('success', 'User berhasil ditambahkan!');
     }
 
     /**
