@@ -75,10 +75,15 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        //
+        $project = Project::with(['members', 'tasks'])->findOrFail($id);
+
+        $members = $project->members;
+
+        return view('common.Projects.details', compact('project', 'members'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -170,12 +175,19 @@ class ProjectController extends Controller
             })
             ->whereHas('members', function ($query) use ($userId) {
                 $query->where('users.id', $userId);  // Tentukan nama tabel untuk kolom id
-        })
+            })
             ->paginate(10);
 
         // Dapatkan data pengguna (jika diperlukan di view)
         $users = User::all();
 
         return view('common.Projects.list_projects', compact('projects', 'users'));
+    }
+
+    public function projectDetails($id)
+    {
+        $project = Project::with(['members', 'tasks'])->findOrFail($id);
+
+        return view('projects.details', compact('project'));
     }
 }

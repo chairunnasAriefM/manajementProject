@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaskController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
     return view('auth.index');
@@ -24,6 +25,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/project/{projectId}/remove-member', [ProjectController::class, 'removeMember']);
     Route::get('/showProjectsCommon', [ProjectController::class, 'other'])->name('showProjectsCommon');
 
+    Route::resource('tasks', TaskController::class);
+
+    // Route::get('/projects/{id}', [ProjectController::class, 'projectDetails'])->name('projects.details');
+    // Route::get('/tasks/{id}', [TaskController::class, 'taskDetails'])->name('tasks.details');
 });
 
 
@@ -50,4 +55,4 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/data',[ProjectController::class, 'index']);
+Route::get('/data', [ProjectController::class, 'index']);

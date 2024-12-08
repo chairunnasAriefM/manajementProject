@@ -126,22 +126,24 @@
                     @endphp
 
                     @foreach ($projects as $project)
-                        <li class="sidebar-item has-sub">
-                            <a href="#" class="sidebar-link">
+                        <li class="sidebar-item dropdown has-sub">
+                            <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link dropdown-toggle"
+                                data-bs-toggle="dropdown">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
                             </a>
 
-                            <!-- Tugas-tugas dalam proyek -->
-                            <ul class="submenu">
+                            <ul class="submenu dropdown-menu">
                                 @foreach ($project->tasks as $task)
                                     <li class="submenu-item">
-                                        <a href="#" class="submenu-link">{{ $task->title }}</a>
+                                        <a href="tasks/{{ $task->id }}"
+                                            class="submenu-link">{{ $task->title }}</a>
                                     </li>
                                 @endforeach
                             </ul>
                         </li>
                     @endforeach
+
                 @endif
 
                 @if (Auth::user()->role == 'admin')

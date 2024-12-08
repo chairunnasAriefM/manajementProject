@@ -22,6 +22,17 @@
     <link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
+    <style>
+        .dropdown:hover>.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown>.dropdown-toggle:active {
+            /* Mencegah klik membuat dropdown menjadi lengket */
+            pointer-events: none;
+        }
+    </style>
+
 
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
@@ -121,6 +132,19 @@
     <script src="{{ asset('mazer/static/js/pages/form-element-select.js') }}"></script>
 
     @yield('scripts')
+
+    <script>
+        document.querySelectorAll('.sidebar-item').forEach(function(everyItem) {
+            everyItem.addEventListener('click', function(e) {
+                let el_link = this.querySelector('a[data-bs-toggle]');
+                if (el_link != null) {
+                    location.href = el_link.href;
+                }
+            });
+        });
+    </script>
+
+
 
 </body>
 

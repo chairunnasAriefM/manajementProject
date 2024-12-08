@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+    public function taskDetails($id)
+    {
+        $task = Task::with(['assignees', 'project'])->findOrFail($id);
+
+        return view('tasks.details', compact('task'));
+    }
     /**
      * Display a listing of the resource.
      */
@@ -28,17 +34,17 @@ class TaskController extends Controller
         $requestData = $request->validate([
             'project_id' => 'required|string|max:255',
             'title' => 'required|string|max:255',
-            'description' => 'required|string|email|max:255',
+            'description' => 'required|string|max:255',
             'assigned_to' => 'required|exists:users,id',
             'due_date' => 'required|date',
-            'status' => 'required|in:in_progress,completed,on_hold',
+            // 'status' => '',
         ]);
 
         $task = new Task();
         $task->fill($requestData);
         $task->save();
 
-        return redirect('/addnewuser')->with('success', 'User berhasil ditambahkan!');
+        return back()->with('success', 'User berhasil ditambahkan!');
     }
 
     /**
