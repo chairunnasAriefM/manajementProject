@@ -15,9 +15,18 @@ class Task extends Model
         'status',
     ];
 
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+
     // Relasi ke Project
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 }

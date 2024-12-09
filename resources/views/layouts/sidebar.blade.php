@@ -126,23 +126,53 @@
                     @endphp
 
                     @foreach ($projects as $project)
-                        <li class="sidebar-item dropdown has-sub">
-                            <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link dropdown-toggle"
-                                data-bs-toggle="dropdown">
+                        <li class="sidebar-item has-sub">
+                            <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
                             </a>
 
-                            <ul class="submenu dropdown-menu">
+                            <ul class="submenu">
                                 @foreach ($project->tasks as $task)
                                     <li class="submenu-item">
-                                        <a href="tasks/{{ $task->id }}"
+                                        <a href="{{ route('tasks.show', $task->id) }}"
                                             class="submenu-link">{{ $task->title }}</a>
                                     </li>
                                 @endforeach
                             </ul>
                         </li>
                     @endforeach
+
+
+                    <script>
+                        function toggleSubmenu(element) {
+                            // Temukan submenu di dalam elemen yang diklik
+                            const submenu = element.querySelector('.submenu');
+
+                            // Toggle tampilan submenu
+                            if (submenu.style.display === 'none' || submenu.style.display === '') {
+                                submenu.style.display = 'block';
+                            } else {
+                                submenu.style.display = 'none';
+                            }
+                        }
+
+                        // Tambahan untuk mencegah event propagation pada link turunan
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const submenuLinks = document.querySelectorAll('.submenu-link');
+                            submenuLinks.forEach(link => {
+                                link.addEventListener('click', function(e) {
+                                    e.stopPropagation(); // Mencegah event toggle submenu
+                                });
+                            });
+                        });
+                    </script>
+
+
+
+
+
+
 
                 @endif
 

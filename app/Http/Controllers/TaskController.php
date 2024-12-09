@@ -50,10 +50,13 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show($id)
     {
-        //
+        $task = Task::with(['assignee', 'project'])->findOrFail($id);
+
+        return view('common.Tasks.detail', compact('task'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
