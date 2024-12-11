@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -92,7 +93,19 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        if ($task->project->created_by !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki izin untuk menghapus tugas ini.',
+            ]);
+        }
+
+        $task->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tugas berhasil dihapus.',
+        ]);
     }
 
     public function addComment(Request $request, Task $task)
@@ -108,5 +121,66 @@ class TaskController extends Controller
         ]);
 
         return back()->with('success', 'Komentar berhasil ditambahkan!');
+    }
+
+    public function markCompleted(Task $task)
+    {
+        if ($task->project->created_by !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki izin untuk menyelesaikan tugas ini.',
+            ]);
+        }
+
+        $task->status = 'completed';
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tugas berhasil ditandai sebagai selesai.',
+        ]);
+    }
+
+    public function addTime(Request $request, Task $task)
+    {
+        if ($task->project->created_by !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki izin untuk memperbarui due date tugas ini.',
+            ]);
+        }
+
+        // Validasi input
+        $request->validate([
+            'due_date' => 'required|date|after_or_equal:today',
+        ]);
+
+        // Perbarui due date
+        $task->due_date = $request->input('due_date');
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Due date tugas berhasil diperbarui.',
+            'due_date' => $task->due_date,
+        ]);
+    }
+
+    public function markWorking(Task $task)
+    {
+        if ($task->assigned_to !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki izin untuk menandai tugas ini sedang dikerjakan.',
+            ]);
+        }
+
+        $task->status = 'in_progress';
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tugas berhasil ditandai sebagai sedang dikerjakan.',
+        ]);
     }
 }

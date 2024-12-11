@@ -28,12 +28,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('tasks', TaskController::class);
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-    Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.add');
+    // Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.add');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
     Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('/tasks/{task}/mark-completed', [TaskController::class, 'markCompleted'])->name('tasks.markCompleted');
+    Route::post('/tasks/{task}/add-time', [TaskController::class, 'addTime'])->name('tasks.addTime');
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.delete');
+    Route::post('/tasks/{task}/mark-working', [TaskController::class, 'markWorking'])->name('tasks.markWorking');
+
+
 
 
     // Route::get('/projects/{id}', [ProjectController::class, 'projectDetails'])->name('projects.details');

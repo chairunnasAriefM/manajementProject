@@ -56,116 +56,167 @@
                 <div class="mt-4">
                     @if (auth()->user()->id === $task->project->created_by)
                         <div>
-                            <button class="btn btn-success me-2" onclick="completeTask()">✔ Tandai sebagai Selesai</button>
-                            <button class="btn btn-primary me-2" onclick="addTime()">⏱ Tambahkan Waktu</button>
-                            <button class="btn btn-danger" onclick="deleteTask()">🗑 Hapus Tugas</button>
+                            <button class="btn btn-success me-2" id="mark-completed-button">✔ Tandai sebagai
+                                Selesai</button>
+                            <button class="btn btn-primary me-2" id="add-time-button">⏱ Tambahkan Waktu</button>
+                            <button class="btn btn-danger" id="delete-task-button">🗑 Hapus Tugas</button>
                         </div>
                     @elseif(auth()->user()->id === $task->assigned_to)
-                        <button class="btn btn-primary" onclick="markProgress()">🔄 Tandai Sedang Dikerjakan</button>
+                        @if ($task->status === 'completed')
+                            <div class="alert alert-secondary" role="alert">
+                                Tugas ini sudah anda selesaikan
+                            </div>
+                        @elseif ($task->status === 'pending')
+                            <button class="btn btn-primary" id="mark-working-button">🔄 Tandai Sedang Dikerjakan</button>
+                            <script>
+                                document.addEventListener('click', function(event) {
+                                    if (event.target && event.target.id === 'mark-working-button') {
+                                        Swal.fire({
+                                            title: 'Tandai Sedang Dikerjakan',
+                                            text: 'Apakah Anda yakin ingin menandai tugas ini sedang dikerjakan?',
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Ya, Tandai!',
+                                            cancelButtonText: 'Batal',
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                fetch("{{ route('tasks.markWorking', $task->id) }}", {
+                                                        method: "POST",
+                                                        headers: {
+                                                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                                            "Content-Type": "application/json"
+                                                        },
+                                                        body: JSON.stringify({})
+                                                    })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        Swal.fire({
+                                                            title: data.success ? 'Berhasil!' : 'Gagal!',
+                                                            text: data.message,
+                                                            icon: data.success ? 'success' : 'error'
+                                                        }).then(() => {
+                                                            if (data.success) location.reload();
+                                                        });
+                                                    });
+                                            }
+                                        });
+                                    }
+                                });
+                            </script>
+                        @else
+                        <div class="alert alert-secondary" role="alert">
+                            Segera selesaikan tugas ini!
+                        </div>
+                        @endif
                     @else
                         <div class="alert alert-secondary" role="alert">
                             Anda tidak memiliki akses khusus untuk tugas ini.
                         </div>
                     @endif
                 </div>
+
             </div>
         </div>
 
         <!-- Comments Section -->
-        <div class="mt-5">
-            <h4 class="text-uppercase text-primary fw-bold">Komentar</h4>
-            <div class="card shadow-sm border-0 rounded-4 p-4">
-                <form action="{{ route('comments.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="task_id" value="{{ $task->id }}">
-                    <input type="hidden" name="content" id="content">
-                    <div class="mb-3">
-                        <div id="summernote"></div>
-                    </div>
-                    <button type="submit" class="btn btn-info text-white shadow">💬 Tambahkan Komentar</button>
-                </form>
+        @if (auth()->user()->id === $task->project->created_by || auth()->user()->id === $task->assigned_to)
+            <div class="mt-5">
+                <h4 class="text-uppercase text-primary fw-bold">Komentar</h4>
+                <div class="card shadow-sm border-0 rounded-4 p-4">
+                    <form action="{{ route('comments.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="task_id" value="{{ $task->id }}">
+                        <input type="hidden" name="content" id="content">
+                        <div class="mb-3">
+                            <div id="summernote"></div>
+                        </div>
+                        <button type="submit" class="btn btn-info text-white shadow">💬 Tambahkan Komentar</button>
+                    </form>
 
-                <!-- Display Comments -->
-                <div class="mt-4">
-                    @if ($task->comments && $task->comments->count())
-                        @foreach ($task->comments->sortByDesc('created_at') as $comment)
-                            <div class="card p-3 mt-2 shadow-sm">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="user d-flex flex-row align-items-center">
-                                        <img src="{{ $comment->user->profile_picture_url ?? 'https://i.imgur.com/hczKIze.jpg' }}"
-                                            width="40" class="user-img rounded-circle me-2">
-                                        <span>
-                                            <small class="font-weight-bold text-primary">{{ $comment->user->name }}</small>
-                                            <p class="mb-0">{!! $comment->content !!}</p>
-                                        </span>
+                    <!-- Display Comments -->
+                    <div class="mt-4">
+                        @if ($task->comments && $task->comments->count())
+                            @foreach ($task->comments->sortByDesc('created_at') as $comment)
+                                <div class="card p-3 mt-2 shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="user d-flex flex-row align-items-center">
+                                            <img src="{{ $comment->user->profile_picture_url ?? 'https://i.imgur.com/hczKIze.jpg' }}"
+                                                width="40" class="user-img rounded-circle me-2">
+                                            <span>
+                                                <small
+                                                    class="font-weight-bold text-primary">{{ $comment->user->name }}</small>
+                                                <p class="mb-0">{!! $comment->content !!}</p>
+                                            </span>
+                                        </div>
+                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                     </div>
-                                    <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                    <div class="d-flex justify-content-end mt-2">
+                                        <a href="#" class="text-info me-3" data-bs-toggle="modal"
+                                            data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
+                                            data-content="{!! $comment->content !!}">Edit</a>
+                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
+                                            class="mb-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-link text-danger p-0">Hapus</button>
+                                        </form>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-end mt-2">
-                                    <a href="#" class="text-info me-3" data-bs-toggle="modal"
-                                        data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
-                                        data-content="{!! $comment->content !!}">Edit</a>
-                                    <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
-                                        class="mb-0">
+                            @endforeach
+                        @else
+                            <p class="text-muted">Tidak ada komentar.</p>
+                        @endif
+                    </div>
+
+                    <!-- Modal Edit Komentar -->
+                    <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editCommentForm" method="POST">
                                         @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-link text-danger p-0">Hapus</button>
+                                        @method('PUT')
+                                        <div class="mb-3">
+                                            <label for="commentContent" class="form-label">Isi Komentar</label>
+                                            <textarea id="commentContent" name="content" class="form-control" rows="4" required></textarea>
+                                        </div>
+                                        <input type="hidden" id="commentId" name="commentId">
+                                        <button type="submit" class="btn btn-primary">Perbarui Komentar</button>
                                     </form>
                                 </div>
                             </div>
-                        @endforeach
-                    @else
-                        <p class="text-muted">Tidak ada komentar.</p>
-                    @endif
-                </div>
-
-                <!-- Modal Edit Komentar -->
-                <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editCommentForm" method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="mb-3">
-                                        <label for="commentContent" class="form-label">Isi Komentar</label>
-                                        <textarea id="commentContent" name="content" class="form-control" rows="4" required></textarea>
-                                    </div>
-                                    <input type="hidden" id="commentId" name="commentId">
-                                    <button type="submit" class="btn btn-primary">Perbarui Komentar</button>
-                                </form>
-                            </div>
                         </div>
                     </div>
+
+                    <script>
+                        const editCommentModal = document.getElementById('editCommentModal');
+                        editCommentModal.addEventListener('show.bs.modal', event => {
+                            const button = event.relatedTarget; // Tombol yang memicu modal
+                            const commentId = button.getAttribute('data-id');
+                            const commentContent = button.getAttribute('data-content');
+
+                            // Mengisi data ke dalam modal
+                            const modalBody = editCommentModal.querySelector('.modal-body #commentContent');
+                            const modalId = editCommentModal.querySelector('.modal-body #commentId');
+
+                            modalBody.value = commentContent;
+                            modalId.value = commentId;
+
+                            // Mengubah action form untuk mengupdate komentar
+                            const form = document.getElementById('editCommentForm');
+                            form.action = `/comments/${commentId}`; // Sesuaikan dengan route update Anda
+                        });
+                    </script>
                 </div>
-
-                <script>
-                    const editCommentModal = document.getElementById('editCommentModal');
-                    editCommentModal.addEventListener('show.bs.modal', event => {
-                        const button = event.relatedTarget; // Tombol yang memicu modal
-                        const commentId = button.getAttribute('data-id');
-                        const commentContent = button.getAttribute('data-content');
-
-                        // Mengisi data ke dalam modal
-                        const modalBody = editCommentModal.querySelector('.modal-body #commentContent');
-                        const modalId = editCommentModal.querySelector('.modal-body #commentId');
-
-                        modalBody.value = commentContent;
-                        modalId.value = commentId;
-
-                        // Mengubah action form untuk mengupdate komentar
-                        const form = document.getElementById('editCommentForm');
-                        form.action = `/comments/${commentId}`; // Sesuaikan dengan route update Anda
-                    });
-                </script>
             </div>
-        </div>
+        @endif
+
     </div>
 
 
@@ -206,4 +257,124 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
+
+    <script>
+        // Konfirmasi SweetAlert2 untuk "Tandai sebagai Selesai"
+        document.getElementById('mark-completed-button').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin menandai tugas ini sebagai selesai?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Tandai Selesai!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Logika permintaan ke server untuk menandai selesai
+                    fetch("{{ route('tasks.markCompleted', $task->id) }}", {
+                            method: "POST",
+                            headers: {
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                "Content-Type": "application/json"
+                            }
+                        }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.success ? 'Berhasil!' : 'Gagal!',
+                                text: data.message,
+                                icon: data.success ? 'success' : 'error'
+                            }).then(() => {
+                                if (data.success) location.reload();
+                            });
+                        });
+                }
+            });
+        });
+
+        // Konfirmasi SweetAlert2 untuk "Tambahkan Waktu"
+        document.getElementById('add-time-button').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Tambahkan Waktu',
+                html: `
+            <label for="due-date-input" class="form-label">Pilih Tanggal Baru:</label>
+            <input type="date" id="due-date-input" class="form-control">
+        `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Tambahkan!',
+                cancelButtonText: 'Batal',
+                preConfirm: () => {
+                    const dueDate = document.getElementById('due-date-input').value;
+                    if (!dueDate) {
+                        Swal.showValidationMessage('Tanggal harus diisi!');
+                    }
+                    return dueDate;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Logika untuk mengirim tanggal baru ke server
+                    fetch("{{ route('tasks.addTime', $task->id) }}", {
+                            method: "POST",
+                            headers: {
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                due_date: result.value
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.success ? 'Berhasil!' : 'Gagal!',
+                                text: data.message,
+                                icon: data.success ? 'success' : 'error'
+                            }).then(() => {
+                                if (data.success) location.reload();
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat memperbarui tanggal.',
+                                icon: 'error'
+                            });
+                        });
+                }
+            });
+        });
+
+
+        // Konfirmasi SweetAlert2 untuk "Hapus Tugas"
+        document.getElementById('delete-task-button').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin menghapus tugas ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Logika permintaan ke server untuk menghapus tugas
+                    fetch("{{ route('tasks.delete', $task->id) }}", {
+                            method: "DELETE",
+                            headers: {
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                "Content-Type": "application/json"
+                            }
+                        }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.success ? 'Berhasil!' : 'Gagal!',
+                                text: data.message,
+                                icon: data.success ? 'success' : 'error'
+                            }).then(() => {
+                                if (data.success) location.reload();
+                            });
+                        });
+                }
+            });
+        });
+    </script>
 @endsection
