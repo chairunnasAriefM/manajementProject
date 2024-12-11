@@ -28,8 +28,20 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'task_id' => 'required|exists:tasks,id',
+            'content' => 'required|string',
+        ]);
+
+        Comment::create([
+            'task_id' => $validated['task_id'],
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+        ]);
+
+        return redirect()->back()->with('success', 'Komentar berhasil ditambahkan.');
     }
+
 
     /**
      * Display the specified resource.
@@ -50,16 +62,27 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'content' => 'required|string|max:255',
+        ]);
+
+        $comment = Comment::findOrFail($id);
+        $comment->content = $request->input('content');
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Komentar berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+
+        return redirect()->back()->with('success', 'Komentar berhasil dihapus.');
     }
 }

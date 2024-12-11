@@ -122,29 +122,43 @@
                     <li class="sidebar-title">Proyek Saya</li>
 
                     @php
-                        $projects = \App\Models\Project::where('created_by', Auth::id())->with('tasks')->get();
+                        $activeProjectId =
+                            request()->route('id') && request()->is('project/*') ? request()->route('id') : null;
+                        $activeTaskId =
+                            request()->route('id') && request()->is('task/*') ? request()->route('id') : null;
+
+                        $projects = \App\Models\Project::where(function ($query) {
+                            $query->where('created_by', Auth::id())->orWhereHas('members', function ($subQuery) {
+                                $subQuery->where('user_id', Auth::id());
+                            });
+                        })
+                            ->with(['tasks.assignee'])
+                            ->get();
+
                     @endphp
 
                     @foreach ($projects as $project)
-                        <li class="sidebar-item has-sub">
-                            <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link">
+                        <li class="sidebar-item has-sub {{ $activeProjectId == $project->id ? 'active' : '' }}"> <a
+                                href="{{ route('projects.show', $project->id) }}" class="sidebar-link">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
                             </a>
 
                             <ul class="submenu">
                                 @foreach ($project->tasks as $task)
-                                    <li class="submenu-item">
-                                        <a href="{{ route('tasks.show', $task->id) }}"
-                                            class="submenu-link">{{ $task->title }}</a>
-                                    </li>
+                                    @if ($project->created_by == Auth::id() || $task->assigned_to == Auth::id())
+                                        <li class="submenu-item {{ $activeTaskId == $task->id ? 'active' : '' }}">
+                                            <a href="{{ route('tasks.show', $task->id) }}"
+                                                class="submenu-link">{{ $task->title }}</a>
+                                        </li>
+                                    @endif
                                 @endforeach
                             </ul>
                         </li>
                     @endforeach
 
 
-                    <script>
+                    {{-- <script>
                         function toggleSubmenu(element) {
                             // Temukan submenu di dalam elemen yang diklik
                             const submenu = element.querySelector('.submenu');
@@ -166,12 +180,7 @@
                                 });
                             });
                         });
-                    </script>
-
-
-
-
-
+                    </script> --}}
 
 
                 @endif

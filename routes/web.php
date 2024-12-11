@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
@@ -26,6 +27,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/showProjectsCommon', [ProjectController::class, 'other'])->name('showProjectsCommon');
 
     Route::resource('tasks', TaskController::class);
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.add');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
+    Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
 
     // Route::get('/projects/{id}', [ProjectController::class, 'projectDetails'])->name('projects.details');
     // Route::get('/tasks/{id}', [TaskController::class, 'taskDetails'])->name('tasks.details');

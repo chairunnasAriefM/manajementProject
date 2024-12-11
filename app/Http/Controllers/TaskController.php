@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -71,8 +72,20 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $this->authorize('update', $task);
+        $request->validate([
+            'status' => 'required|in:pending,in_progress,completed',
+            'due_date' => 'required|date',
+        ]);
+
+        $task->update([
+            'status' => $request->status,
+            'due_date' => $request->due_date,
+        ]);
+
+        return back()->with('success', 'Tugas berhasil diperbarui!');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -80,5 +93,20 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+    }
+
+    public function addComment(Request $request, Task $task)
+    {
+        $validatedData = $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        Comment::create([
+            'task_id' => $task->id,
+            'user_id' => auth()->id(),
+            'content' => $validatedData['content'],
+        ]);
+
+        return back()->with('success', 'Komentar berhasil ditambahkan!');
     }
 }
