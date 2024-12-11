@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\Comment;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,7 +47,15 @@ class TaskController extends Controller
         $task->fill($requestData);
         $task->save();
 
-        return back()->with('success', 'User berhasil ditambahkan!');
+        // Notif
+        Notification::create([
+            'user_id' => $requestData['assigned_to'],
+            'message' => "Anda telah ditugaskan ke tugas \"{$task->title}\".",
+        ]);
+
+
+
+        return back()->with('success', 'Task berhasil ditambahkan!');
     }
 
     /**

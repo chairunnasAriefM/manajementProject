@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -33,11 +34,33 @@ class CommentController extends Controller
             'content' => 'required|string',
         ]);
 
-        Comment::create([
+        $comment = Comment::create([
             'task_id' => $validated['task_id'],
             'user_id' => auth()->id(),
             'content' => $validated['content'],
         ]);
+
+
+        //  notifikasi untuk pemilik tugas
+        $task = $comment->task;
+
+        // Untuk member
+        if ($task->assigned_to !== auth()->id()) {
+            Notification::create([
+                'user_id' => $task->assigned_to,
+                'message' => "Komentar baru pada tugas \"{$task->title}\".",
+            ]);
+        }
+
+        // Untuk leader
+        if ($task->project->created_by !== auth()->id()) {
+            Notification::create([
+                'user_id' => $task->project->created_by,
+                'message' => "Komentar baru pada tugas \"{$task->title}\".",
+            ]);
+        }
+
+
 
         return redirect()->back()->with('success', 'Komentar berhasil ditambahkan.');
     }

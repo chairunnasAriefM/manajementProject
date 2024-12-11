@@ -7,6 +7,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     return view('auth.index');
@@ -39,6 +40,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tasks/{task}/add-time', [TaskController::class, 'addTime'])->name('tasks.addTime');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.delete');
     Route::post('/tasks/{task}/mark-working', [TaskController::class, 'markWorking'])->name('tasks.markWorking');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+
 
 
 

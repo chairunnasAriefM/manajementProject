@@ -124,6 +124,22 @@
     <script src="{{ asset('mazer/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
     <script src="{{ asset('mazer/static/js/pages/form-element-select.js') }}"></script>
 
+    <script>
+        document.querySelector('.dropdown-toggle').addEventListener('click', function() {
+            fetch("{{ route('notifications.markAsRead') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Content-Type": "application/json"
+                }
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    document.querySelector('.badge-notification').textContent = '';
+                }
+            });
+        });
+    </script>
+
     @yield('scripts')
 
 

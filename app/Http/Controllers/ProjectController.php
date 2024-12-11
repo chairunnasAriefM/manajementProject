@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\ProjectMember;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,13 @@ class ProjectController extends Controller
                 ProjectMember::create([
                     'project_id' => $project->id,
                     'user_id' => $userId,
+                ]);
+
+                Notification::create([
+                    'user_id' => $userId,
+                    'message' => "Anda telah ditambahkan ke proyek '{$project->title}'.",
+                    'type' => 'project_member_added',
+                    'reference_id' => $project->id,
                 ]);
             }
         }
