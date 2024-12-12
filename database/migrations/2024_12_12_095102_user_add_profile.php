@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
-            $table->string('type')->nullable();
-            $table->unsignedBigInteger('reference_id')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('avatar')->nullable();
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
-            $table->dropColumn(['type', 'reference_id']);
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['avatar']);
         });
     }
 };
