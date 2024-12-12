@@ -45,7 +45,7 @@
                         <h5 class="text-uppercase text-primary fw-bold">Ditugaskan Kepada</h5>
                         <div class="d-flex align-items-center">
                             <span
-                                class="text-dark fw-semibold">{{ $task->assignee ? $task->assignee->name : 'Belum ditugaskan' }}</span>
+                                class="fw-semibold">{{ $task->assignee ? $task->assignee->name : 'Belum ditugaskan' }}</span>
                             <span
                                 class="badge bg-info text-dark ms-3">{{ $task->assignee ? $task->assignee->email : '-' }}</span>
                         </div>
@@ -67,7 +67,8 @@
                                 Tugas ini sudah anda selesaikan
                             </div>
                         @elseif ($task->status === 'pending')
-                            <button class="btn btn-primary" id="mark-working-button"><i class="bi bi-arrow-clockwise"></i> Tandai Sedang Dikerjakan</button>
+                            <button class="btn btn-primary" id="mark-working-button"><i class="bi bi-arrow-clockwise"></i>
+                                Tandai Sedang Dikerjakan</button>
                             <script>
                                 document.addEventListener('click', function(event) {
                                     if (event.target && event.target.id === 'mark-working-button') {
@@ -130,7 +131,8 @@
                         <div class="mb-3">
                             <div id="summernote"></div>
                         </div>
-                        <button type="submit" class="btn btn-info text-white shadow"><i class="bi bi-chat-dots-fill"></i> Tambahkan Komentar</button>
+                        <button type="submit" class="btn btn-info text-white shadow"><i class="bi bi-chat-dots-fill"></i>
+                            Tambahkan Komentar</button>
                     </form>
 
                     <!-- Display Comments -->
@@ -163,7 +165,8 @@
                                                 class="mb-0">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-link text-danger p-0">Hapus</button>
+                                                <button type="submit" class="btn text-danger p-0"
+                                                    style="none">Hapus</button>
                                             </form>
                                         </div>
                                     @endif
