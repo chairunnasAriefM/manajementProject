@@ -54,45 +54,6 @@
                     </a>
                 </li>
 
-
-                {{-- <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Layouts</span>
-                    </a>
-
-                    <ul class="submenu ">
-
-                        <li class="submenu-item  ">
-                            <a href="layout-default.html" class="submenu-link">Default Layout</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
-
-                        </li>
-
-                        <li class="submenu-item  ">
-                            <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
-
-                        </li>
-
-                    </ul>
-
-
-                </li> --}}
-
                 @if (Auth::user()->role == 'leader')
                     <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
                         <a href="/projects/create" class='sidebar-link'>
@@ -139,7 +100,8 @@
 
                     @foreach ($projects as $project)
                         <li class="sidebar-item has-sub {{ $activeProjectId == $project->id ? 'active' : '' }}"> <a
-                                href="{{ route('projects.show', $project->id) }}" class="sidebar-link">
+                                href="{{ route('projects.show', $project->id) }}" class="sidebar-link"
+                                style="display: block;">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
                             </a>
@@ -158,29 +120,6 @@
                     @endforeach
 
 
-                    {{-- <script>
-                        function toggleSubmenu(element) {
-                            // Temukan submenu di dalam elemen yang diklik
-                            const submenu = element.querySelector('.submenu');
-
-                            // Toggle tampilan submenu
-                            if (submenu.style.display === 'none' || submenu.style.display === '') {
-                                submenu.style.display = 'block';
-                            } else {
-                                submenu.style.display = 'none';
-                            }
-                        }
-
-                        // Tambahan untuk mencegah event propagation pada link turunan
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const submenuLinks = document.querySelectorAll('.submenu-link');
-                            submenuLinks.forEach(link => {
-                                link.addEventListener('click', function(e) {
-                                    e.stopPropagation(); // Mencegah event toggle submenu
-                                });
-                            });
-                        });
-                    </script> --}}
 
 
                 @endif

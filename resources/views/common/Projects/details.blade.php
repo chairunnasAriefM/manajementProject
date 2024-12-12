@@ -34,7 +34,8 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <div>
                                         <p class="mb-0 fw-bold">
-                                            <a href="#" class="text-decoration-none text-dark">{{ $task->title }}</a>
+                                            <a href="{{ route('tasks.show', $task->id) }}"
+                                                class="text-decoration-none text-dark">{{ $task->title }}</a>
                                         </p>
                                         <small class="text-muted">{{ $task->description }}</small>
                                     </div>

@@ -67,7 +67,7 @@
                                 Tugas ini sudah anda selesaikan
                             </div>
                         @elseif ($task->status === 'pending')
-                            <button class="btn btn-primary" id="mark-working-button">🔄 Tandai Sedang Dikerjakan</button>
+                            <button class="btn btn-primary" id="mark-working-button"><i class="bi bi-arrow-clockwise"></i> Tandai Sedang Dikerjakan</button>
                             <script>
                                 document.addEventListener('click', function(event) {
                                     if (event.target && event.target.id === 'mark-working-button') {
@@ -104,9 +104,9 @@
                                 });
                             </script>
                         @else
-                        <div class="alert alert-secondary" role="alert">
-                            Segera selesaikan tugas ini!
-                        </div>
+                            <div class="alert alert-secondary" role="alert">
+                                Segera selesaikan tugas ini!
+                            </div>
                         @endif
                     @else
                         <div class="alert alert-secondary" role="alert">
@@ -130,7 +130,7 @@
                         <div class="mb-3">
                             <div id="summernote"></div>
                         </div>
-                        <button type="submit" class="btn btn-info text-white shadow">💬 Tambahkan Komentar</button>
+                        <button type="submit" class="btn btn-info text-white shadow"><i class="bi bi-chat-dots-fill"></i> Tambahkan Komentar</button>
                     </form>
 
                     <!-- Display Comments -->
@@ -146,21 +146,36 @@
                                                 <small
                                                     class="font-weight-bold text-primary">{{ $comment->user->name }}</small>
                                                 <p class="mb-0">{!! $comment->content !!}</p>
+                                                {{-- {{ $comment->user->user_id }}
+                                                {{ $comment-user }} --}}
                                             </span>
                                         </div>
                                         <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                     </div>
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <a href="#" class="text-info me-3" data-bs-toggle="modal"
-                                            data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
-                                            data-content="{!! $comment->content !!}">Edit</a>
-                                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
-                                            class="mb-0">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-link text-danger p-0">Hapus</button>
-                                        </form>
-                                    </div>
+
+                                    @if ($comment->user_id == Auth::user()->id)
+                                        <div class="d-flex justify-content-end mt-2">
+
+                                            <a href="#" class="text-info me-3" data-bs-toggle="modal"
+                                                data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
+                                                data-content="{{ $comment->content }}">Edit</a>
+                                            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
+                                                class="mb-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link text-danger p-0">Hapus</button>
+                                            </form>
+                                        </div>
+                                    @endif
+
+
+
+                                    {{-- {{ $task->comments-> }}     --}}
+
+
+
+
+
                                 </div>
                             @endforeach
                         @else
