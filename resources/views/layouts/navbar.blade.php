@@ -59,7 +59,9 @@
                             </div>
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
-                                    <img src="{{ asset('mazer/compiled/jpg/1.jpg') }}">
+                                    <img
+                                        src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('mazer/compiled/jpg/1.jpg') }}">
+
                                 </div>
                             </div>
                         </div>

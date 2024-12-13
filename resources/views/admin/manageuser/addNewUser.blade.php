@@ -21,7 +21,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('addnewuser.post') }}" method="POST">
+                <form action="{{ route('addnewuser.post') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Nama -->
@@ -88,6 +88,19 @@
                                 Composer</option>
                         </select>
                     </div>
+
+                    <!-- Avatar -->
+                    <div class="mb-4">
+                        <label for="avatar" class="form-label fw-bold">Upload Avatar</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white">
+                                <i class="bi bi-image"></i>
+                            </span>
+                            <input type="file" name="avatar" id="avatar" class="form-control">
+                        </div>
+                        <small class="text-muted">File berupa gambar (jpg, jpeg, png) maksimal 2MB.</small>
+                    </div>
+
 
                     <!-- Tombol Submit -->
                     <div class="d-grid">

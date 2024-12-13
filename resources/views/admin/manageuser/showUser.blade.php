@@ -50,11 +50,68 @@
                                                 <td>{{ $user->created_at->format('d M Y') }}</td>
                                                 <td>
                                                     <div class="d-flex">
+
                                                         <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal"
-                                                            data-bs-target="#userModal{{ $user->id }}"
-                                                            data-bs-placement="top" title="Show">
-                                                            <i class="bi bi-eye "></i>
+                                                            data-bs-target="#showUserModal{{ $user->id }}">
+                                                            <i class="bi bi-eye"></i>
                                                         </button>
+                                                        <!-- Modal Show User -->
+                                                        <div class="modal fade" id="showUserModal{{ $user->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="showUserModalLabel{{ $user->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                                <div class="modal-content border-0 shadow-lg">
+                                                                    <div class="modal-header bg-primary text-white">
+                                                                        <h5 class="modal-title text-white"
+                                                                            id="showUserModalLabel{{ $user->id }}">
+                                                                            <i class="bi bi-info-circle"></i> User Details:
+                                                                            {{ $user->name }}
+                                                                        </h5>
+                                                                        <button type="button"
+                                                                            class="btn-close btn-close-white"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="row">
+                                                                            <!-- Avatar User -->
+                                                                            @if ($user->avatar_path)
+                                                                                <div class="col-md-4 text-center">
+                                                                                    <img src="{{ asset($user->avatar_path) }}"
+                                                                                        alt="Avatar"
+                                                                                        class="img-fluid rounded-circle shadow">
+                                                                                </div>
+                                                                            @endif
+                                                                            <!-- Informasi User -->
+                                                                            <div
+                                                                                class="col-md-{{ $user->avatar_path ? '8' : '12' }}">
+                                                                                <h6><i
+                                                                                        class="bi bi-person-fill text-primary me-2"></i><strong>Name:</strong>
+                                                                                </h6>
+                                                                                <p>{{ $user->name }}</p>
+                                                                                <h6><i
+                                                                                        class="bi bi-envelope-fill text-primary me-2"></i><strong>Email:</strong>
+                                                                                </h6>
+                                                                                <p>{{ $user->email }}</p>
+                                                                                <h6><i
+                                                                                        class="bi bi-people-fill text-primary me-2"></i><strong>Role:</strong>
+                                                                                </h6>
+                                                                                <p>{{ ucfirst($user->role) }}</p>
+                                                                                <h6><i
+                                                                                        class="bi bi-calendar-check-fill text-primary me-2"></i><strong>Created
+                                                                                        At:</strong></h6>
+                                                                                <p>{{ $user->created_at }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
                                                             data-bs-target="#editUserModal{{ $user->id }}"
@@ -69,7 +126,8 @@
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <form id="editUserForm{{ $user->id }}"
-                                                                        onsubmit="updateUser(event, {{ $user->id }})">
+                                                                        onsubmit="updateUser(event, {{ $user->id }})"
+                                                                        enctype="multipart/form-data">
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title" id="editUserModalLabel">
                                                                                 Edit User: {{ $user->name }}</h5>
@@ -123,9 +181,25 @@
                                                                                         Music Composer</option>
                                                                                 </select>
                                                                             </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="avatar-{{ $user->id }}">Avatar</label>
+                                                                                <input type="file" class="form-control"
+                                                                                    id="avatar-{{ $user->id }}"
+                                                                                    name="avatar" accept="image/*">
+                                                                            </div>
+                                                                            <div class="form-group mb-3">
+                                                                                <label
+                                                                                    for="password-{{ $user->id }}">password</label>
+                                                                                <input type="password" class="form-control"
+                                                                                    id="password-{{ $user->id }}"
+                                                                                    name="password"
+                                                                                    placeholder="Biarkan kosong jika tidak ingin dirubah">
+                                                                            </div>
                                                                         </div>
                                                                         <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary"
+                                                                            <button type="button"
+                                                                                class="btn btn-secondary"
                                                                                 data-bs-dismiss="modal">Close</button>
                                                                             <button type="submit"
                                                                                 class="btn btn-primary">Save
@@ -139,14 +213,13 @@
 
                                                         <button type="button" class="btn btn-sm btn-danger"
                                                             onclick="deleteUser({{ $user->id }})"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Hapus">
                                                             <i class="bi bi-trash text-black"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
-
-                                           
                                         @endforeach
                                     @endif
 
@@ -235,6 +308,8 @@
             const name = document.querySelector(`#name-${userId}`).value;
             const email = document.querySelector(`#email-${userId}`).value;
             const role = document.querySelector(`#role-${userId}`).value;
+            const password = document.querySelector(`#password-${userId}`).value;
+            const avatar = document.querySelector(`#avatar-${userId}`).files[0];
 
             fetch(`/updateuser/${userId}`, {
                     method: 'PUT',
@@ -245,7 +320,8 @@
                     body: JSON.stringify({
                         name,
                         email,
-                        role
+                        role,
+                        // password,
                     }),
                 })
                 .then((response) => response.json())
