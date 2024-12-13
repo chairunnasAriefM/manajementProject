@@ -127,7 +127,10 @@
                                                                 <div class="modal-content">
                                                                     <form id="editUserForm{{ $user->id }}"
                                                                         onsubmit="updateUser(event, {{ $user->id }})"
-                                                                        enctype="multipart/form-data">
+                                                                        enctype="multipart/form-data"
+                                                                        action="{{ route('updateuser', ['id' => $user->id]) }}" method="POST">
+                                                                        @method('put')
+                                                                        @csrf
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title" id="editUserModalLabel">
                                                                                 Edit User: {{ $user->name }}</h5>
@@ -190,8 +193,9 @@
                                                                             </div>
                                                                             <div class="form-group mb-3">
                                                                                 <label
-                                                                                    for="password-{{ $user->id }}">password</label>
-                                                                                <input type="password" class="form-control"
+                                                                                    for="password-{{ $user->id }}">Password</label>
+                                                                                <input type="password"
+                                                                                    class="form-control"
                                                                                     id="password-{{ $user->id }}"
                                                                                     name="password"
                                                                                     placeholder="Biarkan kosong jika tidak ingin dirubah">
@@ -206,6 +210,7 @@
                                                                                 Changes</button>
                                                                         </div>
                                                                     </form>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -299,70 +304,6 @@
                     });
                 }
             });
-        }
-
-        function updateUser(event, userId) {
-            event.preventDefault();
-
-            const form = document.querySelector(`#editUserForm${userId}`);
-            const name = document.querySelector(`#name-${userId}`).value;
-            const email = document.querySelector(`#email-${userId}`).value;
-            const role = document.querySelector(`#role-${userId}`).value;
-            const password = document.querySelector(`#password-${userId}`).value;
-            const avatar = document.querySelector(`#avatar-${userId}`).files[0];
-
-            fetch(`/updateuser/${userId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: JSON.stringify({
-                        name,
-                        email,
-                        role,
-                        // password,
-                    }),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Updated',
-                            text: data.message,
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000,
-                        });
-
-                        // Update table data dynamically
-                        const userRow = document.querySelector(`#user-${userId}`);
-                        userRow.querySelector('td:nth-child(1)').textContent = name;
-                        userRow.querySelector('td:nth-child(2)').textContent = email;
-                        userRow.querySelector('td:nth-child(3) span').textContent = role.charAt(0).toUpperCase() + role
-                            .slice(1);
-
-                        // Close modal
-                        const modal = bootstrap.Modal.getInstance(document.querySelector(`#editUserModal${userId}`));
-                        modal.hide();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to update user!',
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Something went wrong!',
-                    });
-                });
         }
     </script>
 @endsection

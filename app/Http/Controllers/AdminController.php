@@ -64,18 +64,18 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Hapus gambar jika ada
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
             Storage::disk('public')->delete($user->avatar);
         }
 
-        // Hapus pengguna
         $user->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User  deleted successfully!',
-        ]);
+        return back()->with('success', 'Data berhasil dihapus');
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'User  deleted successfully!',
+        // ]);
     }
 
     public function updateUser(Request $request, $userId)
@@ -101,15 +101,17 @@ class AdminController extends Controller
 
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar_path = $avatarPath;
+            $user->avatar= $avatarPath;
         }
 
         $user->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User updated successfully',
-            'avatarPath' => $user->avatar_path ? asset('storage/' . $user->avatar_path) : null
-        ]);
+        return back()->with('success', 'Data berhasil diubah');
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'User updated successfully',
+        //     'avatar' => $user->avatar ? asset('storage/' . $user->avatar) : null
+        // ]);
     }
 }
