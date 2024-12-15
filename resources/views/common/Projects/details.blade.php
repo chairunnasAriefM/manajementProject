@@ -16,9 +16,9 @@
                         <ul class="list-group list-group-flush">
                             @foreach ($project->members as $member)
                                 <li class="list-group-item d-flex align-items-center">
-                                    <div class="avatar bg-primary text-white rounded-circle me-3"
+                                    <div class="avatar bg-primary me-3"
                                         style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                        {{ strtoupper(substr($member->name, 0, 1)) }}
+                                        <img src="{{ asset('storage/' . $member->avatar) }}" alt="">
                                     </div>
                                     <div>
                                         <p class="mb-0 fw-bold">{{ $member->name }}</p>
@@ -29,82 +29,109 @@
                         </ul>
                         <hr>
                         <h5 class="fw-bold text-secondary">Tugas</h5>
-                        <ul class="list-group">
-                            @foreach ($project->tasks as $task)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <!-- Form Pencarian -->
+                        <form action="{{ route('projects.show', $project->id) }}" method="GET" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Cari tugas..."
+                                    value="{{ request('search') }}">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                            </div>
+                        </form>
+                        {{-- daftar tugas --}}
+                        <ul class="list-group" id="taskList">
+                            @forelse ($tasks as $task)
+                                <li class="list-group-item d-flex justify-content-between align-items-center task-item">
                                     <div>
                                         <p class="mb-0 fw-bold">
                                             <a href="{{ route('tasks.show', $task->id) }}"
-                                                class="text-decoration-none text-dark">{{ $task->title }}</a>
+                                                class="text-decoration-none text-success">
+                                                {{ $task->title }}
+                                            </a>
                                         </p>
                                         <small class="text-muted">{{ $task->description }}</small>
                                     </div>
-                                    <span class="badge bg-primary rounded-pill">{{ $task->status }}</span>
+                                    <span
+                                        class="badge rounded-pill
+                                                {{ $task->status == 'in_progress' ? 'bg-warning' : '' }}
+                                                {{ $task->status == 'completed' ? 'bg-success' : '' }}
+                                                {{ $task->status == 'pending' ? 'bg-secondary' : '' }}">
+                                        {{ ucfirst($task->status) }}
+                                    </span>
                                 </li>
-                            @endforeach
+                            @empty
+                                <li class="list-group-item text-center text-muted">Tidak ada tugas ditemukan.</li>
+                            @endforelse
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar Tambah Tugas -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-                            Tambah Tugas
-                        </button>
-                        <h5 class="fw-bold text-secondary">Panduan</h5>
-                        <p class="text-muted">
-                            Gunakan tombol di atas untuk menambahkan tugas baru ke proyek ini.
-                        </p>
+            <!-- Sidebar Tambah Tugas untuk leader-->
+            @if (Auth::user()->role === 'leader')
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <button class="btn btn-success w-100 mb-3" data-bs-toggle="modal"
+                                data-bs-target="#addTaskModal">
+                                Tambah Tugas
+                            </button>
+                            <h5 class="fw-bold text-secondary">Panduan</h5>
+                            <p class="text-muted">
+                                Gunakan tombol di atas untuk menambahkan tugas baru ke proyek ini.
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
+
         </div>
     </div>
 
-    <!-- Modal for Adding Task -->
-    <div class="modal fade" id="addTaskModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
+    <!-- Modal tambah tugas -->
+    <div class="modal fade modal-lg" id="addTaskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content rounded-4 shadow-lg">
                 <!-- Modal Header -->
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">
-                        <i class="bi bi-plus-circle-fill me-2"></i> Tambah Tugas Baru
+                <div class="modal-header bg-primary text-white rounded-top">
+                    <i class="bi bi-plus-circle-fill me-2 mb-2"></i>
+                    <h5 class="modal-title text-white">
+                        Tambah Tugas Baru
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
 
                 <!-- Modal Body -->
-                <div class="modal-body">
+                <div class="modal-body bg-body-secondary text-body">
                     <form action="/tasks" method="POST">
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
 
                         <!-- Task Title -->
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="taskTitle" class="form-label">Judul Tugas <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-pencil"></i></span>
+                                <span class="input-group-text bg-primary text-light">
+                                    <i class="bi bi-pencil mb-2"></i>
+                                </span>
                                 <input type="text" class="form-control" id="taskTitle" name="title"
                                     placeholder="Masukkan judul tugas" required>
                             </div>
                         </div>
 
                         <!-- Task Description -->
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="taskDescription" class="form-label">Deskripsi Tugas <span
                                     class="text-danger">*</span></label>
-                            <textarea class="form-control" id="taskDescription" name="description" rows="4"
+                            <textarea class="form-control rounded-3" id="taskDescription" name="description" rows="3"
                                 placeholder="Deskripsikan tugas secara detail" required></textarea>
                         </div>
 
                         <!-- Assigned To -->
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="assignedTo" class="form-label">Ditugaskan Kepada <span
                                     class="text-danger">*</span></label>
-                            <select class="form-select form-select-lg" id="assignedTo" name="assigned_to" required>
+                            <select class="form-select choices" id="assignedTo" name="assigned_to" required>
                                 <option value="" selected disabled>Pilih anggota</option>
                                 @foreach ($members as $member)
                                     <option value="{{ $member->id }}">{{ $member->name }}</option>
@@ -113,33 +140,43 @@
                         </div>
 
                         <!-- Due Date -->
-                        <div class="mb-4">
-                            <label for="dueDate" class="form-label">Tanggal Batas Akhir <span
+                        <div class="mb-3">
+                            <label for="due_date" class="form-label">Tanggal Batas Akhir <span
                                     class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                                <input type="date" class="form-control" id="dueDate" name="due_date" required>
+                                <span class="input-group-text bg-primary text-light">
+                                    <i class="bi bi-calendar-date mb-2"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="due_date" name="due_date"
+                                    placeholder="Pilih tanggal batas akhir" required>
                             </div>
                         </div>
 
                         <!-- Status -->
-                        <div class="mb-4">
-                            <label for="status" class="form-label">Status Tugas <span class="text-danger">*</span></label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="" selected disabled>Pilih status</option>
-                                <option value="in_progress">Dalam Proses</option>
-                                <option value="completed">Selesai</option>
-                                <option value="on_hold">Ditunda</option>
-                            </select>
-                        </div>
+                        <input type="text" id="status" name="status" value="pending" style="display: none">
 
                         <!-- Submit Button -->
-                        <button type="submit" class="btn btn-success w-100 py-2">
-                            <i class="bi bi-check-circle-fill me-2"></i> Tambah Tugas
-                        </button>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary rounded-3 py-2">
+                                <i class="bi bi-check-circle-fill me-2 mb-4"></i> Tambah Tugas
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr('.datepicker', {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd F Y',
+                allowInput: true
+            });
+        });
+    </script>
 @endsection

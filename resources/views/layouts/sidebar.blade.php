@@ -56,13 +56,6 @@
 
                 {{-- Tampilan khusus leader --}}
                 @if (Auth::user()->role == 'leader')
-                    <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
-                        <a href="/projects/create" class='sidebar-link'>
-                            <i class="bi bi-folder-plus"></i>
-                            <span>Tambah Project</span>
-                        </a>
-                    </li>
-
                     <li class="sidebar-item {{ Request::is('showProjects') ? 'active' : '' }}">
                         <a href="{{ route('showProjects') }}" class='sidebar-link'>
                             <i class="bi bi-folder2-open"></i>
@@ -83,6 +76,15 @@
                 {{-- Tampilan untuk yang bukan admin --}}
                 @if (Auth::user()->role !== 'admin')
                     <li class="sidebar-title">Proyek Saya</li>
+
+                    @if (Auth::user()->role == 'leader')
+                    <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
+                        <a href="/projects/create" class='sidebar-link'>
+                            <i class="bi bi-folder-plus"></i>
+                            <span>Tambah Project</span>
+                        </a>
+                    </li>
+                    @endif
 
                     @php
                         $activeProjectId =

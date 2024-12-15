@@ -142,7 +142,7 @@
                                 <div class="card p-3 mt-2 shadow-sm">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="user d-flex flex-row align-items-center">
-                                            <img src="{{ $comment->user->avatar ?? 'https://i.imgur.com/hczKIze.jpg' }}"
+                                            <img src="{{ asset('storage/' . $comment->user->avatar) }}"
                                                 width="40" class="user-img rounded-circle me-2">
                                             <span>
                                                 <small

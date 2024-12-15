@@ -40,7 +40,7 @@ class TaskController extends Controller
             'description' => 'required|string|max:255',
             'assigned_to' => 'required|exists:users,id',
             'due_date' => 'required|date',
-            // 'status' => '',
+            'status' => 'required',
         ]);
 
         $task = new Task();

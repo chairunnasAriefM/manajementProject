@@ -87,10 +87,20 @@ class ProjectController extends Controller
     {
         $project = Project::with(['members', 'tasks'])->findOrFail($id);
 
+        // Query pencarian tugas
+        $search = request('search');
+        $tasks = $project->tasks()
+            ->when($search, function ($query, $search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            })
+            ->get();
+
         $members = $project->members;
 
-        return view('common.Projects.details', compact('project', 'members'));
+        return view('common.Projects.details', compact('project', 'members', 'tasks'));
     }
+
 
 
     /**
