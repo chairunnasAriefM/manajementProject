@@ -185,16 +185,19 @@
                                                                                         name="members[]" multiple required>
                                                                                         <optgroup label="Pilih Anggota">
                                                                                             @foreach ($users as $user)
-                                                                                                <option
-                                                                                                    value="{{ $user->id }}"
-                                                                                                    {{ $project->members->contains($user->id) ? 'selected' : '' }}>
-                                                                                                    {{ $user->name }}
-                                                                                                    ({{ $user->role }})
-                                                                                                </option>
+                                                                                                @if (!in_array($user->role, ['admin', 'leader']))
+                                                                                                    <option
+                                                                                                        value="{{ $user->id }}"
+                                                                                                        {{ $project->members->contains($user->id) ? 'selected' : '' }}>
+                                                                                                        {{ $user->name }}
+                                                                                                        ({{ $user->role }})
+                                                                                                    </option>
+                                                                                                @endif
                                                                                             @endforeach
                                                                                         </optgroup>
                                                                                     </select>
                                                                                 </div>
+
 
                                                                                 <!-- Daftar Anggota yang Sudah Dipilih -->
                                                                                 <div id="selected-members-{{ $project->id }}"
