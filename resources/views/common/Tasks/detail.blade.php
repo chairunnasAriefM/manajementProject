@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <h5 class="text-uppercase text-primary fw-bold">Tanggal Batas Waktu</h5>
-                        <p class="text-muted">{{ \Carbon\Carbon::parse($task->due_date)->format('d M Y') }}</p>
+                        <p class="text-muted">{{ \Carbon\Carbon::parse($task->due_date)->format('d F Y') }}</p>
                     </div>
                     <div class="col-md-6 mb-4">
                         <h5 class="text-uppercase text-primary fw-bold">Ditugaskan Kepada</h5>
@@ -56,10 +56,102 @@
                 <div class="mt-4">
                     @if (auth()->user()->id === $task->project->created_by)
                         <div>
-                            <button class="btn btn-success me-2" id="mark-completed-button">✔ Tandai sebagai
+                            <button class="btn btn-success me-2" id="mark-completed-button"><i
+                                    class="bi bi-check2-square"></i> Tandai sebagai
                                 Selesai</button>
-                            <button class="btn btn-primary me-2" id="add-time-button">⏱ Tambahkan Waktu</button>
-                            <button class="btn btn-danger" id="delete-task-button">🗑 Hapus Tugas</button>
+                            <button class="btn btn-primary me-2" id="add-time-button"><i class="bi bi-alarm"></i> Tambahkan
+                                Waktu</button>
+                            <button class="btn btn-warning me-2 " id="update-task-button" data-bs-toggle="modal"
+                                data-bs-target="#editTaskModal"><i class="bi bi-pencil-square text-white"></i>
+                                <div class="text-white" style="display: inline-block;">Edit Tugas</div>
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-lg ">
+                                    <div class="modal-content">
+                                        <form id="editTaskForm" method="POST"
+                                            action="{{ route('tasks.update', $task->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-header bg-primary text-white rounded-top">
+                                                <i class="bi bi-plus-circle-fill me-2 mb-2"></i>
+                                                <h5 class="modal-title text-white">
+                                                    Edit Tugas
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body bg-body-secondary text-body">
+                                                <!-- Title -->
+                                                <div class="mb-3">
+                                                    <label for="taskTitle" class="form-label">Judul Tugas</label>
+                                                    <input type="text" name="title" class="form-control" id="taskTitle"
+                                                        value="{{ old('title', $task->title) }}" required>
+                                                </div>
+
+                                                <!-- Description -->
+                                                <div class="mb-3">
+                                                    <label for="taskDescription" class="form-label">Deskripsi</label>
+                                                    <textarea name="description" class="form-control" id="taskDescription" rows="3" required>{{ old('description', $task->description) }}</textarea>
+                                                </div>
+
+                                                <!-- Assigned To -->
+                                                <div class="mb-3">
+                                                    <label for="assignedTo" class="form-label">Ditugaskan Kepada</label>
+                                                    <select name="assigned_to" id="assignedTo" class="choices form-select"
+                                                        required>
+                                                        @foreach ($members as $member)
+                                                            <option value="{{ $member->id }}"
+                                                                {{ $member->id == $task->assigned_to ? 'selected' : '' }}>
+                                                                {{ $member->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <!-- Due Date -->
+                                                <div class="mb-3">
+                                                    <label for="due_date" class="form-label">Tanggal Batas Akhir <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-primary text-light">
+                                                            <i class="bi bi-calendar-date mb-2"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control datepicker" id="due_date"
+                                                            name="due_date" placeholder="Pilih tanggal batas akhir" required
+                                                            value="{{ old('due_date', $task->due_date) }}">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Status -->
+                                                <div class="mb-3">
+                                                    <label for="status" class="form-label">Status</label>
+                                                    <select name="status" id="status" class="form-select" required>
+                                                        <option value="pending"
+                                                            {{ $task->status == 'pending' ? 'selected' : '' }}>Pending
+                                                        </option>
+                                                        <option value="in_progress"
+                                                            {{ $task->status == 'in_progress' ? 'selected' : '' }}>In
+                                                            Progress</option>
+                                                        <option value="completed"
+                                                            {{ $task->status == 'completed' ? 'selected' : '' }}>Completed
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-danger" id="delete-task-button"><i class="bi bi-trash"></i> Hapus
+                                Tugas</button>
                         </div>
                     @elseif(auth()->user()->id === $task->assigned_to)
                         @if ($task->status === 'completed')
@@ -67,7 +159,8 @@
                                 Tugas ini sudah anda selesaikan
                             </div>
                         @elseif ($task->status === 'pending')
-                            <button class="btn btn-primary" id="mark-working-button"><i class="bi bi-arrow-clockwise"></i>
+                            <button class="btn btn-primary" id="mark-working-button"><i
+                                    class="bi bi-arrow-clockwise"></i>
                                 Tandai Sedang Dikerjakan</button>
                             <script>
                                 document.addEventListener('click', function(event) {
@@ -124,16 +217,18 @@
             <div class="mt-5">
                 <h4 class="text-uppercase text-primary fw-bold">Komentar</h4>
                 <div class="card shadow-sm border-0 rounded-4 p-4">
-                    <form action="{{ route('comments.store') }}" method="POST">
+                    <form action="{{ route('comments.store') }}" method="POST" onsubmit="return validateCommentForm()">
                         @csrf
                         <input type="hidden" name="task_id" value="{{ $task->id }}">
                         <input type="hidden" name="content" id="content">
                         <div class="mb-3">
                             <div id="summernote"></div>
                         </div>
-                        <button type="submit" class="btn btn-info text-white shadow"><i class="bi bi-chat-dots-fill"></i>
-                            Tambahkan Komentar</button>
+                        <button type="submit" class="btn btn-info text-white shadow">
+                            <i class="bi bi-chat-dots-fill"></i> Tambahkan Komentar
+                        </button>
                     </form>
+
 
                     <!-- Display Comments -->
                     <div class="mt-4">
@@ -142,14 +237,13 @@
                                 <div class="card p-3 mt-2 shadow-sm">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="user d-flex flex-row align-items-center">
-                                            <img src="{{ asset('storage/' . $comment->user->avatar) }}"
-                                                width="40" class="user-img rounded-circle me-2">
+                                            <!-- Perbaikan Avatar -->
+                                            <img src="{{ asset('storage/' . $comment->user->avatar) }}" width="40"
+                                                height="40" class="user-img rounded-circle me-2 object-fit-cover">
                                             <span>
                                                 <small
                                                     class="font-weight-bold text-primary">{{ $comment->user->name }}</small>
                                                 <p class="mb-0">{!! $comment->content !!}</p>
-                                                {{-- {{ $comment->user->user_id }}
-                                                {{ $comment-user }} --}}
                                             </span>
                                         </div>
                                         <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
@@ -157,7 +251,6 @@
 
                                     @if ($comment->user_id == Auth::user()->id)
                                         <div class="d-flex justify-content-end mt-2">
-
                                             <a href="#" class="text-info me-3" data-bs-toggle="modal"
                                                 data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
                                                 data-content="{{ $comment->content }}">Edit</a>
@@ -170,15 +263,6 @@
                                             </form>
                                         </div>
                                     @endif
-
-
-
-                                    {{-- {{ $task->comments-> }}     --}}
-
-
-
-
-
                                 </div>
                             @endforeach
                         @else
@@ -186,10 +270,11 @@
                         @endif
                     </div>
 
+
                     <!-- Modal Edit Komentar -->
-                    <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
+                    <div class="modal modal-xl fade" id="editCommentModal" tabindex="-1"
+                        aria-labelledby="editCommentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
@@ -201,8 +286,9 @@
                                         @csrf
                                         @method('PUT')
                                         <div class="mb-3">
-                                            <label for="commentContent" class="form-label">Isi Komentar</label>
-                                            <textarea id="commentContent" name="content" class="form-control" rows="4" required></textarea>
+                                            <label for="editSummernote" class="form-label">Isi Komentar</label>
+                                            <!-- Summernote Textarea -->
+                                            <textarea id="editSummernote" name="content" class="form-control"></textarea>
                                         </div>
                                         <input type="hidden" id="commentId" name="commentId">
                                         <button type="submit" class="btn btn-primary">Perbarui Komentar</button>
@@ -212,25 +298,8 @@
                         </div>
                     </div>
 
-                    <script>
-                        const editCommentModal = document.getElementById('editCommentModal');
-                        editCommentModal.addEventListener('show.bs.modal', event => {
-                            const button = event.relatedTarget; // Tombol yang memicu modal
-                            const commentId = button.getAttribute('data-id');
-                            const commentContent = button.getAttribute('data-content');
 
-                            // Mengisi data ke dalam modal
-                            const modalBody = editCommentModal.querySelector('.modal-body #commentContent');
-                            const modalId = editCommentModal.querySelector('.modal-body #commentId');
 
-                            modalBody.value = commentContent;
-                            modalId.value = commentId;
-
-                            // Mengubah action form untuk mengupdate komentar
-                            const form = document.getElementById('editCommentForm');
-                            form.action = `/comments/${commentId}`; // Sesuaikan dengan route update Anda
-                        });
-                    </script>
                 </div>
             </div>
         @endif
@@ -262,6 +331,15 @@
                 $('#content').val(content); // Set value input hidden
             });
         });
+
+        function validateCommentForm() {
+            const content = $('#content').val().trim();
+            if (!content) {
+                alert('Komentar tidak boleh kosong.');
+                return false;
+            }
+            return true;
+        }
     </script>
     <style>
         .comment-box {
@@ -392,6 +470,48 @@
                             });
                         });
                 }
+            });
+        });
+
+        // flatpicker
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr('.datepicker', {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd F Y',
+                allowInput: true
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Summernote untuk modal edit
+            $('#editSummernote').summernote({
+                height: 200, // Tinggi editor
+                tabsize: 2,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+
+            // Buka modal dan isi Summernote dengan konten yang ada
+            $('#editCommentModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Tombol yang memicu modal
+                var commentId = button.data('id'); // Ambil data ID komentar
+                var commentContent = button.data('content'); // Ambil konten komentar
+
+                $('#commentId').val(commentId); // Set ID komentar di hidden input
+                $('#editSummernote').summernote('code', commentContent); // Set konten di Summernote
+            });
+
+            // Hapus konten Summernote saat modal ditutup
+            $('#editCommentModal').on('hidden.bs.modal', function() {
+                $('#editSummernote').summernote('reset'); // Reset konten Summernote
             });
         });
     </script>

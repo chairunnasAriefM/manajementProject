@@ -42,7 +42,7 @@
                                 </li>
                             @endforelse
                             <li>
-                                <p class="text-center py-2 mb-0"><a href="{{ route('notifications.index') }}">Lihat
+                                <p class="text-center py-2 mb-0"><a href="#">Lihat
                                         semua notifikasi</a></p>
                             </li>
                         </ul>
@@ -110,7 +110,8 @@
                         <p class="text-muted mb-0">{{ Auth::user()->email }}</p>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
 
             <!-- Body -->

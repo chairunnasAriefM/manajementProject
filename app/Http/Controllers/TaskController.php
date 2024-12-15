@@ -64,8 +64,9 @@ class TaskController extends Controller
     public function show($id)
     {
         $task = Task::with(['assignee', 'project'])->findOrFail($id);
+        $members = $task->project ? $task->project->members : [];
 
-        return view('common.Tasks.detail', compact('task'));
+        return view('common.Tasks.detail', compact('task', 'members'));
     }
 
 
@@ -80,21 +81,23 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, $id)
     {
-        $this->authorize('update', $task);
-        $request->validate([
+        $task = Task::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'assigned_to' => 'nullable|exists:users,id',
+            'due_date' => 'nullable|date',
             'status' => 'required|in:pending,in_progress,completed',
-            'due_date' => 'required|date',
         ]);
 
-        $task->update([
-            'status' => $request->status,
-            'due_date' => $request->due_date,
-        ]);
+        $task->update($validatedData);
 
-        return back()->with('success', 'Tugas berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Tugas berhasil diperbarui.');
     }
+
 
 
     /**
