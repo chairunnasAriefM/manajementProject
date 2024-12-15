@@ -66,6 +66,7 @@
                                                             aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                                                 <div class="modal-content border-0 shadow-lg">
+                                                                    {{-- body --}}
                                                                     <div class="modal-header bg-primary text-white">
                                                                         <h5 class="modal-title text-white"
                                                                             id="showUserModalLabel{{ $user->id }}">
@@ -77,7 +78,7 @@
                                                                             data-bs-dismiss="modal"
                                                                             aria-label="Close"></button>
                                                                     </div>
-                                                                    <div class="modal-body">
+                                                                    <div class="modal-body bg-body-secondary text-body">
                                                                         <div class="row">
                                                                             <!-- Avatar User -->
                                                                             @if ($user->avatar_path)
@@ -138,7 +139,8 @@
                                                                         @csrf
                                                                         <!-- Modal Header -->
                                                                         <div class="modal-header bg-primary text-white">
-                                                                            <h5 class="modal-title text-white" id="editUserModalLabel">
+                                                                            <h5 class="modal-title text-white"
+                                                                                id="editUserModalLabel">
                                                                                 Edit User :
                                                                                 <strong>{{ $user->name }}</strong>
                                                                             </h5>
@@ -148,7 +150,7 @@
                                                                         </div>
 
                                                                         <!-- Modal Body -->
-                                                                        <div class="modal-body">
+                                                                        <div class="modal-body bg-body-secondary text-body">
                                                                             <!-- Current Avatar -->
                                                                             <div class="text-center mb-4">
                                                                                 <h6 class="text-muted">Current Avatar</h6>
@@ -217,7 +219,8 @@
                                                                                 <input type="file" class="form-control"
                                                                                     id="avatar-{{ $user->id }}"
                                                                                     name="avatar" accept="image/*">
-                                                                                <small class="text-muted">Biarkan kosong jika anda tidak ingin mengubah
+                                                                                <small class="text-muted">Biarkan kosong
+                                                                                    jika anda tidak ingin mengubah
                                                                                     avatar.</small>
                                                                             </div>
 
