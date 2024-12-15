@@ -6,7 +6,7 @@
     <div class="container mt-5">
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white text-center">
-                <h3 class="fw-bold">Tambah Pengguna Baru</h3>
+                <h3 class="fw-bold text-white">Tambah Pengguna Baru</h3>
             </div>
 
             <div class="card-body mt-3">

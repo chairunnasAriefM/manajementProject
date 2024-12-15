@@ -7,8 +7,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
                         <h4 class="card-title mb-0">User Management</h4>
+                        <button class="btn btn-success ms-auto">
+                            <i class="bi bi-plus"></i>
+                            <a href="{{ route('addnewuser') }}" class="text-white text-decoration-none">Tambah User</a>
+                        </button>
                     </div>
                     <div class="card-content">
                         <div class="table-responsive p-3">

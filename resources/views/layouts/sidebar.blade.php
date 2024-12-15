@@ -54,6 +54,7 @@
                     </a>
                 </li>
 
+                {{-- Tampilan khusus leader --}}
                 @if (Auth::user()->role == 'leader')
                     <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
                         <a href="/projects/create" class='sidebar-link'>
@@ -79,6 +80,7 @@
                     </li>
                 @endif
 
+                {{-- Tampilan untuk yang bukan admin --}}
                 @if (Auth::user()->role !== 'admin')
                     <li class="sidebar-title">Proyek Saya</li>
 
@@ -124,20 +126,14 @@
 
                 @endif
 
+                {{-- Tampilan khusus admin --}}
                 @if (Auth::user()->role == 'admin')
                     <li class="sidebar-title">Pengelolaan Akun</li>
 
-                    <li class="sidebar-item {{ Request::is('showuser*') ? 'active' : '' }}">
+                    <li class="sidebar-item {{ Request::is('showuser*')||('addnewuser') ? 'active' : '' }}">
                         <a href="showuser" class='sidebar-link'>
                             <i class="bi bi-people-fill"></i>
                             <span>Data User</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item {{ Request::is('addnewuser*') ? 'active' : '' }}">
-                        <a href="addnewuser" class='sidebar-link'>
-                            <i class="bi bi-person-fill-add"></i>
-                            <span>Tambah User</span>
                         </a>
                     </li>
 
