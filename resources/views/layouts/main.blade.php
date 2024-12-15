@@ -89,11 +89,11 @@
                 });
             @endif
 
-            @if ($errors->any())
+            @if (session('error'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal',
-                    html: '{!! implode('<br>', $errors->all()) !!}',
+                    html: '{{ session('error') }}',
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,

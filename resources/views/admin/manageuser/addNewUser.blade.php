@@ -29,7 +29,7 @@
                         <label for="name" class="form-label fw-bold">Nama</label>
                         <div class="input-group">
                             <span class="input-group-text bg-primary text-white">
-                                <i class="bi bi-person"></i>
+                                <i class="bi bi-person mb-2"></i>
                             </span>
                             <input type="text" name="name" id="name" class="form-control"
                                 placeholder="Masukkan nama" value="{{ old('name') }}" required>
@@ -41,7 +41,7 @@
                         <label for="email" class="form-label fw-bold">Email</label>
                         <div class="input-group">
                             <span class="input-group-text bg-primary text-white">
-                                <i class="bi bi-envelope"></i>
+                                <i class="bi bi-envelope mb-2"></i>
                             </span>
                             <input type="email" name="email" id="email" class="form-control"
                                 placeholder="Masukkan email" value="{{ old('email') }}" required>
@@ -53,7 +53,7 @@
                         <label for="password" class="form-label fw-bold">Password</label>
                         <div class="input-group">
                             <span class="input-group-text bg-primary text-white">
-                                <i class="bi bi-lock"></i>
+                                <i class="bi bi-lock mb-2"></i>
                             </span>
                             <input type="password" name="password" id="password" class="form-control"
                                 placeholder="Masukkan password" required>
@@ -65,7 +65,7 @@
                         <label for="password_confirmation" class="form-label fw-bold">Konfirmasi Password</label>
                         <div class="input-group">
                             <span class="input-group-text bg-primary text-white">
-                                <i class="bi bi-lock"></i>
+                                <i class="bi bi-lock mb-2"></i>
                             </span>
                             <input type="password" name="password_confirmation" id="password_confirmation"
                                 class="form-control" placeholder="Konfirmasi password" required>
@@ -94,7 +94,7 @@
                         <label for="avatar" class="form-label fw-bold">Upload Avatar</label>
                         <div class="input-group">
                             <span class="input-group-text bg-primary text-white">
-                                <i class="bi bi-image"></i>
+                                <i class="bi bi-image mb-2"></i>
                             </span>
                             <input type="file" name="avatar" id="avatar" class="form-control">
                         </div>

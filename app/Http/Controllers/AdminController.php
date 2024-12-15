@@ -62,27 +62,24 @@ class AdminController extends Controller
 
     public function destroyUser($id)
     {
-        $user = User::findOrFail($id);
+        try {
+            $user = User::findOrFail($id);
 
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $user->delete();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menghapus data');
         }
-
-        $user->delete();
-
-        return back()->with('success', 'Data berhasil dihapus');
-
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'User  deleted successfully!',
-        // ]);
     }
+
 
     public function updateUser(Request $request, $userId)
     {
         $user = User::findOrFail($userId);
 
-        // Validate the request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -99,19 +96,17 @@ class AdminController extends Controller
             $user->password = bcrypt($request->password);
         }
 
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar= $avatarPath;
+            $user->avatar = $avatarPath;
         }
 
         $user->save();
 
         return back()->with('success', 'Data berhasil diubah');
-
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'User updated successfully',
-        //     'avatar' => $user->avatar ? asset('storage/' . $user->avatar) : null
-        // ]);
     }
 }

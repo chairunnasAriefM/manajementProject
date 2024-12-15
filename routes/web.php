@@ -62,7 +62,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/showuser', [AdminController::class, 'showUser'])->name('showuser');
     Route::get('/addnewuser', [AdminController::class, 'showAddnewUserForm'])->name('addnewuser');
     Route::post('/addnewuser', [AdminController::class, 'addNewUser'])->name('addnewuser.post');
-    Route::delete('/deleteuser/{id}', [AdminController::class, 'destroyUser'])->name('admin.delete');
+    Route::delete('/deleteuser/{id}', [AdminController::class, 'destroyUser'])->name('user.delete');
     Route::put('/updateuser/{id}', [AdminController::class, 'updateUser'])->name('updateuser');
 
     // manage Project

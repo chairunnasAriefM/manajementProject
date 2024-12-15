@@ -128,7 +128,8 @@
                                                                     <form id="editUserForm{{ $user->id }}"
                                                                         onsubmit="updateUser(event, {{ $user->id }})"
                                                                         enctype="multipart/form-data"
-                                                                        action="{{ route('updateuser', ['id' => $user->id]) }}" method="POST">
+                                                                        action="{{ route('updateuser', ['id' => $user->id]) }}"
+                                                                        method="POST">
                                                                         @method('put')
                                                                         @csrf
                                                                         <div class="modal-header">
@@ -222,6 +223,14 @@
                                                             title="Hapus">
                                                             <i class="bi bi-trash text-black"></i>
                                                         </button>
+
+                                                        <form id="delete-form-{{ $user->id }}"
+                                                            action="{{ route('user.delete', $user->id) }}" method="POST"
+                                                            style="display: none;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -249,61 +258,21 @@
     <script>
         function deleteUser(userId) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: 'You won\'t be able to revert this!',
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
-                reverseButtons: true
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Iya, Hapus!',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({
-                        url: '/deleteuser/' + userId,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}', // CSRF token
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                // Show success toast
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: response.message,
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-
-                                // Remove the user row from the table without reload
-                                $('#user-' + userId).remove(); // Remove the specific row by ID
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: response.message,
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'There was an issue with the deletion.',
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-                        }
-                    });
+                    document.getElementById(`delete-form-${userId}`).submit();
                 }
             });
         }
     </script>
+
+
 @endsection
