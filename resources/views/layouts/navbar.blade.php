@@ -71,10 +71,11 @@
                         <li>
                             <h6 class="dropdown-header">Halo, {{ Auth::user()->name }}!</h6>
                         </li>
-                        <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
-                                Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
-                                Settings</a></li>
+                        <li>
+                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#profileModal">
+                                <i class="icon-mid bi bi-person me-2"></i> My Profile
+                            </a>
+                        </li>
                         <hr class="dropdown-divider">
                         </li>
                         <li>
@@ -94,10 +95,74 @@
     </nav>
 </header>
 
+<!-- Modal untuk show profile-->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 600px;">
+        <div class="modal-content shadow-lg rounded-4">
+            <!-- Header -->
+            <div class="modal-header border-0 py-3">
+                <div class="d-flex align-items-center">
+                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Profile Photo"
+                        class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                    <div>
+                        <h5 class="mb-0">{{ Auth::user()->name }}</h5>
+                        <p class="text-muted mb-0">{{ Auth::user()->email }}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body px-4 py-3">
+                <div class="mb-3">
+                    <label for="nama" class="form-label">Nama</label>
+                    <input type="text" class="form-control" id="nama" value="{{ Auth::user()->name }}"
+                        disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Alamat Email</label>
+                    <input type="email" class="form-control" id="email" value="{{ Auth::user()->email }}"
+                        disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="Role" class="form-label">Jabatan</label>
+                    <input type="text" class="form-control" id="Role" value="{{ Auth::user()->role }}"
+                        disabled>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Style -->
+    <style>
+        .modal-content {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+        }
+
+        .modal-body {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+    </style>
+</div>
+
 
 <script>
     document.getElementById('logoutButton').addEventListener('click', function() {
-        // Menampilkan SweetAlert2 untuk konfirmasi logout
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda akan keluar dari aplikasi!",
@@ -108,12 +173,11 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika pengguna memilih "Ya, Logout!", kirimkan logout request menggunakan fetch API
                 fetch('{{ route('logout') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Menambahkan CSRF token untuk keamanan
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON
                             .stringify({}) // Bisa kirim data kosong, karena hanya memerlukan POST
