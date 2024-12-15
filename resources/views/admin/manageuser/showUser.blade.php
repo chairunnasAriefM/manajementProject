@@ -127,7 +127,7 @@
                                                         <div class="modal fade" id="editUserModal{{ $user->id }}"
                                                             tabindex="-1" aria-labelledby="editUserModalLabel"
                                                             aria-hidden="true">
-                                                            <div class="modal-dialog">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
                                                                 <div class="modal-content">
                                                                     <form id="editUserForm{{ $user->id }}"
                                                                         onsubmit="updateUser(event, {{ $user->id }})"
@@ -136,33 +136,52 @@
                                                                         method="POST">
                                                                         @method('put')
                                                                         @csrf
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="editUserModalLabel">
-                                                                                Edit User: {{ $user->name }}</h5>
+                                                                        <!-- Modal Header -->
+                                                                        <div class="modal-header bg-primary text-white">
+                                                                            <h5 class="modal-title text-white" id="editUserModalLabel">
+                                                                                Edit User :
+                                                                                <strong>{{ $user->name }}</strong>
+                                                                            </h5>
                                                                             <button type="button" class="btn-close"
                                                                                 data-bs-dismiss="modal"
                                                                                 aria-label="Close"></button>
                                                                         </div>
+
+                                                                        <!-- Modal Body -->
                                                                         <div class="modal-body">
-                                                                            <div class="form-group mb-3">
-                                                                                <label
-                                                                                    for="name-{{ $user->id }}">Name</label>
+                                                                            <!-- Current Avatar -->
+                                                                            <div class="text-center mb-4">
+                                                                                <h6 class="text-muted">Current Avatar</h6>
+                                                                                <img src="{{ asset('storage/' . $user->avatar) }}"
+                                                                                    alt="User Avatar"
+                                                                                    class="rounded-circle shadow"
+                                                                                    style="width: 100px; height: 100px; object-fit: cover;">
+                                                                            </div>
+
+                                                                            <!-- Name Input -->
+                                                                            <div class="form-group mb-4">
+                                                                                <label for="name-{{ $user->id }}"
+                                                                                    class="form-label">Name</label>
                                                                                 <input type="text" class="form-control"
                                                                                     id="name-{{ $user->id }}"
                                                                                     name="name"
                                                                                     value="{{ $user->name }}" required>
                                                                             </div>
-                                                                            <div class="form-group mb-3">
-                                                                                <label
-                                                                                    for="email-{{ $user->id }}">Email</label>
+
+                                                                            <!-- Email Input -->
+                                                                            <div class="form-group mb-4">
+                                                                                <label for="email-{{ $user->id }}"
+                                                                                    class="form-label">Email</label>
                                                                                 <input type="email" class="form-control"
                                                                                     id="email-{{ $user->id }}"
                                                                                     name="email"
                                                                                     value="{{ $user->email }}" required>
                                                                             </div>
-                                                                            <div class="form-group mb-3">
-                                                                                <label
-                                                                                    for="role-{{ $user->id }}">Role</label>
+
+                                                                            <!-- Role Selection -->
+                                                                            <div class="form-group mb-4">
+                                                                                <label for="role-{{ $user->id }}"
+                                                                                    class="form-label">Role</label>
                                                                                 <select class="form-select"
                                                                                     id="role-{{ $user->id }}"
                                                                                     name="role" required>
@@ -189,36 +208,48 @@
                                                                                         Music Composer</option>
                                                                                 </select>
                                                                             </div>
-                                                                            <div class="form-group mb-3">
-                                                                                <label
-                                                                                    for="avatar-{{ $user->id }}">Avatar</label>
+
+                                                                            <!-- Avatar Upload -->
+                                                                            <div class="form-group mb-4">
+                                                                                <label for="avatar-{{ $user->id }}"
+                                                                                    class="form-label">Upload New
+                                                                                    Avatar</label>
                                                                                 <input type="file" class="form-control"
                                                                                     id="avatar-{{ $user->id }}"
                                                                                     name="avatar" accept="image/*">
+                                                                                <small class="text-muted">Biarkan kosong jika anda tidak ingin mengubah
+                                                                                    avatar.</small>
                                                                             </div>
-                                                                            <div class="form-group mb-3">
-                                                                                <label
-                                                                                    for="password-{{ $user->id }}">Password</label>
+
+                                                                            <!-- Password Input -->
+                                                                            <div class="form-group mb-4">
+                                                                                <label for="password-{{ $user->id }}"
+                                                                                    class="form-label">Password</label>
                                                                                 <input type="password"
                                                                                     class="form-control"
                                                                                     id="password-{{ $user->id }}"
                                                                                     name="password"
-                                                                                    placeholder="Biarkan kosong jika tidak ingin dirubah">
+                                                                                    placeholder="Biarkan kosong jika anda tetap ingin menggunakan password yang sama">
                                                                             </div>
                                                                         </div>
+
+                                                                        <!-- Modal Footer -->
                                                                         <div class="modal-footer">
                                                                             <button type="button"
                                                                                 class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">Close</button>
+                                                                                data-bs-dismiss="modal">
+                                                                                <i class="bi bi-x-circle"></i> Close
+                                                                            </button>
                                                                             <button type="submit"
-                                                                                class="btn btn-primary">Save
-                                                                                Changes</button>
+                                                                                class="btn btn-primary">
+                                                                                <i class="bi bi-save"></i> Save Changes
+                                                                            </button>
                                                                         </div>
                                                                     </form>
-
                                                                 </div>
                                                             </div>
                                                         </div>
+
 
 
                                                         <button type="button" class="btn btn-sm btn-danger"
