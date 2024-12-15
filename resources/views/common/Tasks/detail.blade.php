@@ -282,7 +282,8 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="editCommentForm" method="POST">
+                                    <form id="editCommentForm" method="POST"
+                                        action="{{ route('comments.update', $comment->id) }}">
                                         @csrf
                                         @method('PUT')
                                         <div class="mb-3">
@@ -487,7 +488,7 @@
         $(document).ready(function() {
             // Inisialisasi Summernote untuk modal edit
             $('#editSummernote').summernote({
-                height: 200, // Tinggi editor
+                height: 200,
                 tabsize: 2,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -501,18 +502,17 @@
 
             // Buka modal dan isi Summernote dengan konten yang ada
             $('#editCommentModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Tombol yang memicu modal
-                var commentId = button.data('id'); // Ambil data ID komentar
-                var commentContent = button.data('content'); // Ambil konten komentar
+                var button = $(event.relatedTarget);
+                var commentId = button.data('id');
+                var commentContent = button.data('content');
 
-                $('#commentId').val(commentId); // Set ID komentar di hidden input
-                $('#editSummernote').summernote('code', commentContent); // Set konten di Summernote
+                var actionUrl = "{{ route('comments.update', ':id') }}".replace(':id', commentId);
+                $('#editCommentForm').attr('action', actionUrl);
+
+                // Set konten Summernote
+                $('#editSummernote').summernote('code', commentContent);
             });
 
-            // Hapus konten Summernote saat modal ditutup
-            $('#editCommentModal').on('hidden.bs.modal', function() {
-                $('#editSummernote').summernote('reset'); // Reset konten Summernote
-            });
         });
     </script>
 @endsection
