@@ -96,7 +96,7 @@
                             <span class="input-group-text bg-primary text-white">
                                 <i class="bi bi-image mb-2"></i>
                             </span>
-                            <input type="file" name="avatar" id="avatar" class="form-control">
+                            <input type="file" name="avatar" id="avatar" class="form-control" accept="image/*">
                         </div>
                         <small class="text-muted">File berupa gambar (jpg, jpeg, png) maksimal 2MB.</small>
                     </div>
