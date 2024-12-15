@@ -10,19 +10,19 @@ use App\Models\User;
 class AuthController extends Controller
 {
 
-    // Tampilkan form login
     public function showLoginForm()
     {
+        if (auth()->check()) {
+            return redirect('/dashboard')->with('error', 'Anda sudah login!');
+        }
         return view('auth.index');
     }
 
-    // Tampilkan form register
     public function showRegisterForm()
     {
         return view('auth.index');
     }
 
-    // Logika Register
     public function register(Request $request)
     {
         $request->validate([
@@ -41,7 +41,6 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Registration successful!');
     }
 
-    // Logika Login
     public function login(Request $request)
     {
         $request->validate([
@@ -62,7 +61,6 @@ class AuthController extends Controller
         return back()->withErrors(['login' => 'Invalid credentials'])->withInput();
     }
 
-    // Logika Logout
     public function logout(Request $request)
     {
         Auth::logout();
