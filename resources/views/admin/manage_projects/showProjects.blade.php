@@ -41,9 +41,12 @@
                                         @foreach ($projects as $project)
                                             <tr id="project-{{ $project->id }}">
                                                 <td class="text-bold-500">{{ $project->title }}</td>
-                                                <td>{{ $project->description }}</td>
-                                                <td>{{ $project->start_date }}</td>
-                                                <td>{{ $project->end_date }}</td>
+                                                <td>{{ Str::limit($project->description, 50) }} </td>
+                                                <td>{{ \Carbon\Carbon::parse($project->start_date)->translatedFormat('d F Y') }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($project->end_date)->translatedFormat('d F Y') }}
+                                                </td>
+
                                                 <td>
                                                     <span
                                                         class="badge {{ $project->status == 'completed' ? 'bg-success' : ($project->status == 'in_progress' ? 'bg-warning' : 'bg-secondary') }}">
@@ -84,133 +87,157 @@
                                                                                 data-bs-dismiss="modal"
                                                                                 aria-label="Close"></button>
                                                                         </div>
-                                                                        <div class="modal-body">
-                                                                            <!-- Title Input -->
-                                                                            <div class="form-group mb-3">
-                                                                                <label for="title-{{ $project->id }}"
-                                                                                    class="form-label">Title</label>
-                                                                                <input type="text" class="form-control"
-                                                                                    id="title-{{ $project->id }}"
-                                                                                    name="title"
-                                                                                    value="{{ $project->title }}" required>
-                                                                            </div>
+                                                                        <div class="modal-body bg-body-secondary text-body">
+                                                                            <div class="row">
+                                                                                <!-- Title Input -->
+                                                                                <div class="col-md-12 mb-3">
+                                                                                    <label for="title-{{ $project->id }}"
+                                                                                        class="form-label fw-bold">Judul
+                                                                                        Proyek</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="title-{{ $project->id }}"
+                                                                                        name="title"
+                                                                                        value="{{ $project->title }}"
+                                                                                        required>
+                                                                                </div>
 
-                                                                            <!-- Description Input -->
-                                                                            <div class="form-group mb-3">
-                                                                                <label
-                                                                                    for="description-{{ $project->id }}"
-                                                                                    class="form-label">Description</label>
-                                                                                <textarea class="form-control" id="description-{{ $project->id }}" name="description" rows="4">{{ $project->description }}</textarea>
-                                                                            </div>
+                                                                                <!-- Description Input -->
+                                                                                <div class="col-md-12 mb-3">
+                                                                                    <label
+                                                                                        for="description-{{ $project->id }}"
+                                                                                        class="form-label fw-bold">Deskripsi</label>
+                                                                                    <textarea class="form-control" id="description-{{ $project->id }}" name="description" rows="4"
+                                                                                        placeholder="Tambahkan deskripsi proyek">{{ $project->description }}</textarea>
+                                                                                </div>
 
-                                                                            <!-- Start Date -->
-                                                                            <div class="form-group mb-3">
-                                                                                <label for="start_date-{{ $project->id }}"
-                                                                                    class="form-label">Start Date</label>
-                                                                                <input type="date" class="form-control"
-                                                                                    id="start_date-{{ $project->id }}"
-                                                                                    name="start_date"
-                                                                                    value="{{ $project->start_date }}"
-                                                                                    required>
-                                                                            </div>
+                                                                                <!-- Tanggal Mulai -->
+                                                                                <div class="col-md-6 mb-3">
+                                                                                    <label
+                                                                                        for="start_date-{{ $project->id }}"
+                                                                                        class="form-label fw-bold">Tanggal
+                                                                                        Mulai</label>
+                                                                                    <div class="input-group">
+                                                                                        <span
+                                                                                            class="input-group-text bg-primary text-white d-flex align-items-center justify-content-center">
+                                                                                            <i
+                                                                                                class="bi bi-calendar-date mb-2"></i>
+                                                                                        </span>
+                                                                                        <input type="text"
+                                                                                            class="form-control datepicker"
+                                                                                            id="start_date-{{ $project->id }}"
+                                                                                            name="start_date"
+                                                                                            value="{{ $project->start_date }}"
+                                                                                            placeholder="Pilih tanggal mulai"
+                                                                                            required>
+                                                                                    </div>
+                                                                                </div>
 
-                                                                            <!-- End Date -->
-                                                                            <div class="form-group mb-3">
-                                                                                <label for="end_date-{{ $project->id }}"
-                                                                                    class="form-label">End Date</label>
-                                                                                <input type="date" class="form-control"
-                                                                                    id="end_date-{{ $project->id }}"
-                                                                                    name="end_date"
-                                                                                    value="{{ $project->end_date }}"
-                                                                                    required>
-                                                                            </div>
+                                                                                <!-- Tanggal Selesai -->
+                                                                                <div class="col-md-6 mb-3">
+                                                                                    <label
+                                                                                        for="end_date-{{ $project->id }}"
+                                                                                        class="form-label fw-bold">Tanggal
+                                                                                        Selesai</label>
+                                                                                    <div class="input-group">
+                                                                                        <span
+                                                                                            class="input-group-text bg-primary text-white d-flex align-items-center justify-content-center">
+                                                                                            <i
+                                                                                                class="bi bi-calendar-date mb-2"></i>
+                                                                                        </span>
+                                                                                        <input type="text"
+                                                                                            class="form-control datepicker"
+                                                                                            id="end_date-{{ $project->id }}"
+                                                                                            name="end_date"
+                                                                                            value="{{ $project->end_date }}"
+                                                                                            placeholder="Pilih tanggal selesai"
+                                                                                            required>
+                                                                                    </div>
+                                                                                </div>
 
-                                                                            <!-- Status Dropdown -->
-                                                                            <div class="form-group mb-3">
-                                                                                <label for="status-{{ $project->id }}"
-                                                                                    class="form-label">Status</label>
-                                                                                <select class="form-select"
-                                                                                    id="status-{{ $project->id }}"
-                                                                                    name="status" required>
-                                                                                    <option value="in_progress"
-                                                                                        {{ $project->status == 'in_progress' ? 'selected' : '' }}>
-                                                                                        In Progress
-                                                                                    </option>
-                                                                                    <option value="completed"
-                                                                                        {{ $project->status == 'completed' ? 'selected' : '' }}>
-                                                                                        Completed
-                                                                                    </option>
-                                                                                    <option value="on_hold"
-                                                                                        {{ $project->status == 'on_hold' ? 'selected' : '' }}>
-                                                                                        On Hold
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
+                                                                                <!-- Status Dropdown -->
+                                                                                <div class="col-md-12 mb-3">
+                                                                                    <label for="status-{{ $project->id }}"
+                                                                                        class="form-label fw-bold">Status</label>
+                                                                                    <select class="form-select"
+                                                                                        id="status-{{ $project->id }}"
+                                                                                        name="status" required>
+                                                                                        <option value="in_progress"
+                                                                                            {{ $project->status == 'in_progress' ? 'selected' : '' }}>
+                                                                                            In Progress</option>
+                                                                                        <option value="completed"
+                                                                                            {{ $project->status == 'completed' ? 'selected' : '' }}>
+                                                                                            Completed</option>
+                                                                                        <option value="on_hold"
+                                                                                            {{ $project->status == 'on_hold' ? 'selected' : '' }}>
+                                                                                            On Hold</option>
+                                                                                    </select>
+                                                                                </div>
 
-                                                                            <!-- Project Members -->
-                                                                            <div class="form-group mb-3">
-                                                                                <label for="members-{{ $project->id }}"
-                                                                                    class="form-label">Project
-                                                                                    Members</label>
-                                                                                <select class="choices form-select"
-                                                                                    id="members-{{ $project->id }}"
-                                                                                    name="members[]" multiple required>
-                                                                                    <optgroup label="Select Members">
-                                                                                        @foreach ($users as $user)
-                                                                                            <option
-                                                                                                value="{{ $user->id }}"
-                                                                                                {{ $project->members->contains($user->id) ? 'selected' : '' }}>
-                                                                                                {{ $user->name }}
-                                                                                                ({{ $user->role }})
-                                                                                            </option>
+                                                                                <!-- Project Members -->
+                                                                                <div class="col-md-12 mb-3">
+                                                                                    <label
+                                                                                        for="members-{{ $project->id }}"
+                                                                                        class="form-label fw-bold">Anggota
+                                                                                        Proyek</label>
+                                                                                    <select class="choices form-select"
+                                                                                        id="members-{{ $project->id }}"
+                                                                                        name="members[]" multiple required>
+                                                                                        <optgroup label="Pilih Anggota">
+                                                                                            @foreach ($users as $user)
+                                                                                                <option
+                                                                                                    value="{{ $user->id }}"
+                                                                                                    {{ $project->members->contains($user->id) ? 'selected' : '' }}>
+                                                                                                    {{ $user->name }}
+                                                                                                    ({{ $user->role }})
+                                                                                                </option>
+                                                                                            @endforeach
+                                                                                        </optgroup>
+                                                                                    </select>
+                                                                                </div>
+
+                                                                                <!-- Daftar Anggota yang Sudah Dipilih -->
+                                                                                <div id="selected-members-{{ $project->id }}"
+                                                                                    class="mt-3">
+                                                                                    <h5 class="mb-3">Anggota Terpilih
+                                                                                    </h5>
+                                                                                    <ul id="selected-members-list-{{ $project->id }}"
+                                                                                        class="list-group">
+                                                                                        @foreach ($project->members as $member)
+                                                                                            <li class="list-group-item d-flex justify-content-between align-items-center"
+                                                                                                id="member-{{ $member->id }}">
+                                                                                                <div>
+                                                                                                    <span
+                                                                                                        class="fw-bold">{{ $member->name }}</span>
+                                                                                                    <span
+                                                                                                        class="text-muted">({{ $member->role }})</span>
+                                                                                                </div>
+                                                                                                <button type="button"
+                                                                                                    class="btn btn-danger btn-sm"
+                                                                                                    onclick="removeMember({{ $project->id }}, {{ $member->id }})">
+                                                                                                    <i
+                                                                                                        class="bi bi-x-circle"></i>
+                                                                                                    Hapus
+                                                                                                </button>
+                                                                                            </li>
                                                                                         @endforeach
-                                                                                    </optgroup>
-                                                                                </select>
+                                                                                    </ul>
+                                                                                </div>
                                                                             </div>
-
-                                                                            <!-- Daftar Anggota yang Sudah Dipilih -->
-                                                                            <div id="selected-members-{{ $project->id }}"
-                                                                                class="mt-3">
-                                                                                <h5 class="mb-3">Selected Members</h5>
-                                                                                <ul id="selected-members-list-{{ $project->id }}"
-                                                                                    class="list-group">
-                                                                                    @foreach ($project->members as $member)
-                                                                                        <li class="list-group-item d-flex justify-content-between align-items-center"
-                                                                                            id="member-{{ $member->id }}">
-                                                                                            <div>
-                                                                                                <span
-                                                                                                    class="fw-bold">{{ $member->name }}</span>
-                                                                                                <span
-                                                                                                    class="text-muted">({{ $member->role }})</span>
-                                                                                            </div>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-danger btn-sm"
-                                                                                                onclick="removeMember({{ $project->id }}, {{ $member->id }})">
-                                                                                                <i
-                                                                                                    class="bi bi-x-circle"></i>
-                                                                                                Hapus
-                                                                                            </button>
-                                                                                        </li>
-                                                                                    @endforeach
-                                                                                </ul>
-                                                                            </div>
-
-
-
-
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <button type="button"
                                                                                 class="btn btn-secondary"
-                                                                                data-bs-dismiss="modal">Close</button>
+                                                                                data-bs-dismiss="modal">Tutup</button>
                                                                             <button type="submit"
-                                                                                class="btn btn-primary">Save
-                                                                                Changes</button>
+                                                                                class="btn btn-primary">Simpan
+                                                                                Perubahan</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
                                                             </div>
                                                         </div>
+
 
                                                         <button class="btn btn-sm btn-danger"
                                                             onclick="deleteProject({{ $project->id }})">
@@ -234,7 +261,7 @@
                                                             <button type="button" class="btn-close btn-close-white"
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div class="modal-body">
+                                                        <div class="modal-body bg-body-secondary text-body">
                                                             <div class="row">
                                                                 <!-- Informasi Proyek -->
                                                                 <div class="col-md-6">
@@ -421,5 +448,16 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr('.datepicker', {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd F Y',
+                allowInput: true
+            });
+        });
     </script>
 @endsection
