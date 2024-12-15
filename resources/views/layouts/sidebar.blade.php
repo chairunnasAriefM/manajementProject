@@ -130,7 +130,8 @@
                 @if (Auth::user()->role == 'admin')
                     <li class="sidebar-title">Pengelolaan Akun</li>
 
-                    <li class="sidebar-item {{ Request::is('showuser*')||('addnewuser') ? 'active' : '' }}">
+                    <li
+                        class="sidebar-item {{ Request::is('showuser*') || Request::is('addnewuser') ? 'active' : '' }}">
                         <a href="showuser" class='sidebar-link'>
                             <i class="bi bi-people-fill"></i>
                             <span>Data User</span>
