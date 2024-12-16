@@ -98,7 +98,7 @@
                                                     <th>Nama</th>
                                                     <th>Email</th>
                                                     <th>Peran</th>
-                                                    <th>Terakhir Login</th>
+                                                    <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
