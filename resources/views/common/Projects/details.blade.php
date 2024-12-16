@@ -8,9 +8,25 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h3 class="card-title text-primary fw-bold">{{ $project->title }}</h3>
-                        <p class="card-text text-muted">
-                            <strong>Deskripsi:</strong> {{ $project->description }}
+                        <p class="card-text text-muted ">
+                            <strong>Deskripsi:</strong> {{ \Illuminate\Support\Str::limit($project->description, 150, '...') }}
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#descriptionModal">Lihat Selengkapnya</a>
                         </p>
+
+                        <!-- Modal -->
+                        <div class="modal fade modal-xl" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="descriptionModalLabel">Deskripsi Proyek</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ $project->description }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <hr>
                         <h5 class="fw-bold text-secondary">Anggota</h5>
                         <ul class="list-group list-group-flush">
