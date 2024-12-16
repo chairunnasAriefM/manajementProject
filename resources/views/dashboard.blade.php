@@ -137,7 +137,7 @@
                         <div class="card-body py-4 px-4">
                             <div class="d-flex align-items-center">
                                 <div class="avatar avatar-xl">
-                                    <img src="mazer/compiled/jpg/1.jpg" alt="Face 1">
+                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Face 1">
                                 </div>
                                 <div class="ms-3 name">
                                     <h5 class="font-bold">{{ Auth::user()->name }}</h5>
@@ -158,6 +158,393 @@
                 </div>
             </section>
         </div>
+    @elseif (Auth::user()->role === 'leader')
+        <div class="page-heading">
+            <h3>Dashboard Leader</h3>
+        </div>
+        <div class="page-content">
+            <section class="row">
+                <div class="col-12 col-lg-9">
+                    <div class="row">
+                        <div class="col-6 col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-4 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                            <div class="stats-icon purple mb-2">
+                                                <i class="iconly-boldFolder"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                            <h6 class="text-muted font-semibold">Total Proyek</h6>
+                                            <h6 class="font-extrabold mb-0">{{ $projectTotal }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-4 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                            <div class="stats-icon blue mb-2">
+                                                <i class="fa fa-folder-open"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                            <h6 class="text-muted font-semibold">Proyek Aktif</h6>
+                                            <h6 class="font-extrabold mb-0">{{ $projectAktifData }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-4 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                            <div class="stats-icon green mb-2">
+                                                <i class="fa fa-folder"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                            <h6 class="text-muted font-semibold">Proyek Ditunda</h6>
+                                            <h6 class="font-extrabold mb-0">{{ $projectHold }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body px-4 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                            <div class="stats-icon red mb-2">
+                                                <i class="iconly-boldNotification"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                            <h6 class="text-muted font-semibold">Notifikasi Baru</h6>
+                                            <h6 class="font-extrabold mb-0">{{ $newNotifications }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <!-- Card Header -->
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4>Daftar Proyek Aktif</h4>
+                                    <input type="text" id="searchUser" class="form-control w-25"
+                                        placeholder="Cari Proyek...">
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <!-- Table -->
+                                        <table class="table table-hover table-striped">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Judul</th>
+                                                    <th>Tanggal Mulai</th>
+                                                    <th>Tanggal Berakhir</th>
+                                                    <th>Progress</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="userTable">
+                                                @foreach ($projectAktif as $key => $project)
+                                                    @php
+                                                        $totalTasks = $project->tasks->count();
+                                                        $completedTasks = $project->tasks
+                                                            ->where('status', 'completed')
+                                                            ->count();
+                                                        $progress =
+                                                            $totalTasks > 0
+                                                                ? round(($completedTasks / $totalTasks) * 100)
+                                                                : 0;
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ $key + 1 }}</td>
+                                                        <td>{{ $project->title }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($project->start_date)->translatedFormat('d F Y') }}
+                                                        </td>
+                                                        <td>{{ \Carbon\Carbon::parse($project->end_date)->translatedFormat('d F Y') }}
+                                                        </td>
+                                                        <td>
+                                                            <!-- Progress Chart -->
+                                                            <div id="chart-{{ $project->id }}"
+                                                                style="width: 200px; height: 50px;"></div>
+                                                            <script>
+                                                                document.addEventListener('DOMContentLoaded', function() {
+                                                                    const options = {
+                                                                        series: [{
+                                                                            name: 'Progress',
+                                                                            data: [{{ $progress }}]
+                                                                        }],
+                                                                        chart: {
+                                                                            type: 'bar',
+                                                                            height: 70,
+                                                                            width: 200,
+                                                                            toolbar: {
+                                                                                show: false
+                                                                            }
+                                                                        },
+                                                                        plotOptions: {
+                                                                            bar: {
+                                                                                horizontal: true,
+                                                                                barHeight: '60%' // Memperbesar bar menjadi lebih tebal
+                                                                            }
+                                                                        },
+                                                                        xaxis: {
+                                                                            max: 100,
+                                                                            labels: {
+                                                                                show: false
+                                                                            }
+                                                                        },
+                                                                        yaxis: {
+                                                                            show: false
+                                                                        },
+                                                                        dataLabels: {
+                                                                            enabled: true,
+                                                                            formatter: function(val) {
+                                                                                return val + '%';
+                                                                            },
+                                                                            style: {
+                                                                                fontSize: '12px',
+                                                                                colors: ['#000']
+                                                                            }
+                                                                        },
+                                                                        colors: ['#00E396'],
+                                                                        grid: {
+                                                                            show: false
+                                                                        }
+                                                                    };
+
+                                                                    const chart = new ApexCharts(
+                                                                        document.querySelector("#chart-{{ $project->id }}"),
+                                                                        options
+                                                                    );
+                                                                    chart.render();
+                                                                });
+                                                            </script>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-info btn-sm text-white"
+                                                                onclick="location.href='{{ route('projects.show', $project->id) }}'">
+                                                                <i class="bi bi-eye"></i> Detail
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <!-- Pagination -->
+                                        <div class="pagination-container">
+                                            {{ $projectAktif->links() }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="card">
+                        <div class="card-body py-4 px-4">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-xl">
+                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Face 1">
+                                </div>
+                                <div class="ms-3 name">
+                                    <h5 class="font-bold">{{ Auth::user()->name }}</h5>
+                                    <h6 class="text-muted mb-0">{{ Auth::user()->email }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Profil Proyek</h4>
+                        </div>
+                        <div class="card-body">
+                            <div id="chart-visitors-profile"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    @else
+        @if (Auth::user()->role === 'admin')
+            <div class="page-heading">
+                <h3>Dashboard Admin</h3>
+            </div>
+            <div class="page-content">
+                <section class="row">
+                    <div class="col-12 col-lg-9">
+                        <div class="row">
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-4 py-4-5">
+                                        <div class="row">
+                                            <div
+                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                                <div class="stats-icon purple mb-2">
+                                                    <i class="iconly-boldFolder"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                                <h6 class="text-muted font-semibold">Total Proyek</h6>
+                                                <h6 class="font-extrabold mb-0">{{ $totalProjects }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-4 py-4-5">
+                                        <div class="row">
+                                            <div
+                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                                <div class="stats-icon blue mb-2">
+                                                    <i class="iconly-boldPaper"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                                <h6 class="text-muted font-semibold">Total Tugas</h6>
+                                                <h6 class="font-extrabold mb-0">{{ $totalTasks }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-4 py-4-5">
+                                        <div class="row">
+                                            <div
+                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                                <div class="stats-icon green mb-2">
+                                                    <i class="iconly-boldUser"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                                <h6 class="text-muted font-semibold">Pengguna Aktif</h6>
+                                                <h6 class="font-extrabold mb-0">{{ $activeUsers }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-4 py-4-5">
+                                        <div class="row">
+                                            <div
+                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                                                <div class="stats-icon red mb-2">
+                                                    <i class="iconly-boldNotification"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                                <h6 class="text-muted font-semibold">Notifikasi Baru</h6>
+                                                <h6 class="font-extrabold mb-0">{{ $newNotifications }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h4>Daftar Pengguna Aktif</h4>
+                                        <input type="text" id="searchUser" class="form-control w-25"
+                                            placeholder="Cari pengguna...">
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Nama</th>
+                                                        <th>Email</th>
+                                                        <th>Peran</th>
+                                                        <th>Terakhir Login</th>
+                                                        <th>Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="userTable">
+                                                    @foreach ($activeUsersData as $key => $user)
+                                                        <tr>
+                                                            <td>{{ $key + 1 }}</td>
+                                                            <td>{{ $user->name }}</td>
+                                                            <td>{{ $user->email }}</td>
+                                                            <td>
+                                                                <span
+                                                                    class="badge
+                                                            {{ $user->role === 'admin' ? 'bg-primary' : ($user->role === 'leader' ? 'bg-success' : 'bg-secondary') }}">
+                                                                    {{ ucfirst($user->role) }}
+                                                                </span>
+                                                            </td>
+                                                            <td>{{ $user->email_verified_at ? $user->email_verified_at->format('d-m-Y H:i') : '-' }}
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-info btn-sm text-white">
+                                                                    <i class="bi bi-eye"></i> Detail
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <div class="card">
+                            <div class="card-body py-4 px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-xl">
+                                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Face 1">
+                                    </div>
+                                    <div class="ms-3 name">
+                                        <h5 class="font-bold">{{ Auth::user()->name }}</h5>
+                                        <h6 class="text-muted mb-0">{{ Auth::user()->email }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Profil Proyek</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart-visitors-profile"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        @endif
     @endif
 
 @endsection
@@ -214,6 +601,10 @@
             });
         });
     </script>
+
+
+
+
 @endsection
 
 
