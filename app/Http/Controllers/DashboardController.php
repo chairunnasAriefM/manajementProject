@@ -9,19 +9,23 @@ use App\Models\Notification;
 use App\Models\ProjectMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Shetabit\Visitor\Traits\Visitor;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // visitor()->visit();
         $user = Auth::user();
         $role = $user->role;
+
+
 
         // Data umum
         $totalProjects = Project::count();
         $totalTasks = Task::count();
-        $activeUsers = User::whereNotNull('email_verified_at')->count();
-        $activeUsersData = User::whereNotNull('email_verified_at')->get();
+        $activeUsers = User::online()->count();
+        $activeUsersData = User::online()->get();
         $newNotifications = Notification::where('user_id', $user->id)
             ->where('is_read', false)
             ->count();

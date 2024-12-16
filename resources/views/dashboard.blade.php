@@ -98,7 +98,6 @@
                                                     <th>Nama</th>
                                                     <th>Email</th>
                                                     <th>Peran</th>
-                                                    <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
@@ -115,7 +114,6 @@
                                                                 {{ ucfirst($user->role) }}
                                                             </span>
                                                         </td>
-                                                        <td>{{ $user->email_verified_at ? $user->email_verified_at->format('d-m-Y H:i') : '-' }}
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-info btn-sm text-white">
