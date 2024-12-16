@@ -483,7 +483,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="pendingTasksTable">
-                                                @foreach ($pendingTasks as $key => $task)
+                                                @forelse ($pendingTasks as $key => $task)
                                                     <tr>
                                                         <td>{{ $key + 1 }}</td>
                                                         <td>{{ $task->title }}</td>
@@ -496,7 +496,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">Tidak ada data</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -524,7 +528,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="inProgressTasksTable">
-                                                @foreach ($inProgressTasks as $key => $task)
+                                                @forelse ($inProgressTasks as $key => $task)
                                                     <tr>
                                                         <td>{{ $key + 1 }}</td>
                                                         <td>{{ $task->title }}</td>
@@ -537,7 +541,11 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">Tidak ada data</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -545,6 +553,41 @@
                             </div>
                         </div>
                     </div>
+
+                    <script>
+                        // Fungsi pencarian real-time untuk tabel
+                        function searchTasks(inputId, tableId) {
+                            const input = document.getElementById(inputId);
+                            const filter = input.value.toLowerCase();
+                            const table = document.getElementById(tableId);
+                            const rows = table.getElementsByTagName('tr');
+
+                            for (let i = 0; i < rows.length; i++) {
+                                const cols = rows[i].getElementsByTagName('td');
+                                if (cols.length > 0) {
+                                    let found = false;
+                                    for (let j = 0; j < cols.length; j++) {
+                                        if (cols[j].textContent.toLowerCase().includes(filter)) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    rows[i].style.display = found ? '' : 'none';
+                                }
+                            }
+                        }
+
+                        // Event listener untuk input pencarian
+                        document.getElementById('searchPendingTasks').addEventListener('keyup', () => {
+                            searchTasks('searchPendingTasks', 'pendingTasksTable');
+                        });
+
+                        document.getElementById('searchInProgressTasks').addEventListener('keyup', () => {
+                            searchTasks('searchInProgressTasks', 'inProgressTasksTable');
+                        });
+                    </script>
+
+
 
                 </div>
                 <div class="col-12 col-lg-3">
