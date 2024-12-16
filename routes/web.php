@@ -1,11 +1,17 @@
 <?php
 
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Project;
+use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\NotificationController;
 
@@ -18,9 +24,7 @@ Route::middleware(['auth'])->group(function () {
         return view('layouts.main');
     });
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
+    Route::get('dashboard', [DashboardController::class, 'index']);
 
     Route::resource('projects', ProjectController::class);
     Route::get('/showProjects', [ProjectController::class, 'perLeader'])->name('showProjects');

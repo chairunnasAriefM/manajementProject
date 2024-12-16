@@ -130,7 +130,6 @@
 
                 {{-- Tampilan khusus admin --}}
                 @if (Auth::user()->role == 'admin')
-                    <li class="sidebar-title">Pengelolaan Akun</li>
 
                     <li
                         class="sidebar-item {{ Request::is('showuser*') || Request::is('addnewuser') ? 'active' : '' }}">

@@ -108,7 +108,7 @@
 
     <!-- Need: Apexcharts -->
     <script src="{{ asset('mazer/extensions/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('mazer/static/js/pages/dashboard.js') }}"></script>
+    {{-- <script src="{{ asset('mazer/static/js/pages/dashboard.js') }}"></script> --}}
 
     {{-- Tooltip --}}
     <script>
