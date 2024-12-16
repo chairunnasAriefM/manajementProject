@@ -19,8 +19,6 @@ class DashboardController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-
-
         // Data umum
         $totalProjects = Project::count();
         $totalTasks = Task::count();

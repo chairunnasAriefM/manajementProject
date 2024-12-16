@@ -98,7 +98,7 @@
                                                     <th>Nama</th>
                                                     <th>Email</th>
                                                     <th>Peran</th>
-                                                    <th>Aksi</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody id="userTable">
@@ -115,15 +115,15 @@
                                                             </span>
                                                         </td>
                                                         </td>
-                                                        <td>
-                                                            <button class="btn btn-info btn-sm text-white">
-                                                                <i class="bi bi-eye"></i> Detail
-                                                            </button>
-                                                        </td>
+
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        <!-- Pagination -->
+                                        <div class="pagination-container">
+                                            {{ $projectAktif->links() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
