@@ -78,12 +78,12 @@
                     <li class="sidebar-title">Proyek Saya</li>
 
                     @if (Auth::user()->role == 'leader')
-                    <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
-                        <a href="/projects/create" class='sidebar-link'>
-                            <i class="bi bi-folder-plus"></i>
-                            <span>Tambah Project</span>
-                        </a>
-                    </li>
+                        <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
+                            <a href="/projects/create" class='sidebar-link'>
+                                <i class="bi bi-folder-plus"></i>
+                                <span>Tambah Project</span>
+                            </a>
+                        </li>
                     @endif
 
                     @php
@@ -102,26 +102,32 @@
 
                     @endphp
 
-                    @foreach ($projects as $project)
-                        <li class="sidebar-item has-sub {{ $activeProjectId == $project->id ? 'active' : '' }}"> <a
-                                href="{{ route('projects.show', $project->id) }}" class="sidebar-link"
+                    @forelse  ($projects as $project)
+                        <li
+                            class="sidebar-item {{ $project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id() ? 'has-sub' : '' }} {{ $activeProjectId == $project->id ? 'active' : '' }}">
+                            <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link"
                                 style="display: block;">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
                             </a>
 
-                            <ul class="submenu">
-                                @foreach ($project->tasks as $task)
-                                    @if ($project->created_by == Auth::id() || $task->assigned_to == Auth::id())
-                                        <li class="submenu-item {{ $activeTaskId == $task->id ? 'active' : '' }}">
-                                            <a href="{{ route('tasks.show', $task->id) }}"
-                                                class="submenu-link">{{ $task->title }}</a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
+                            @if ($project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id())
+                                <ul class="submenu">
+                                    @foreach ($project->tasks as $task)
+                                        @if ($project->created_by == Auth::id() || $task->assigned_to == Auth::id())
+                                            <li class="submenu-item {{ $activeTaskId == $task->id ? 'active' : '' }}">
+                                                <a href="{{ route('tasks.show', $task->id) }}"
+                                                    class="submenu-link">{{ $task->title }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            @endif
                         </li>
-                    @endforeach
+
+                    @empty
+                        <li class="sidebar-title text-secondary ">Kamu belum punya proyek</li>
+                    @endforelse
 
 
 
@@ -130,7 +136,6 @@
 
                 {{-- Tampilan khusus admin --}}
                 @if (Auth::user()->role == 'admin')
-
                     <li
                         class="sidebar-item {{ Request::is('showuser*') || Request::is('addnewuser') ? 'active' : '' }}">
                         <a href="showuser" class='sidebar-link'>
