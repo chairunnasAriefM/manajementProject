@@ -104,18 +104,19 @@
 
                     @forelse  ($projects as $project)
                         <li
-                            class="sidebar-item {{ $project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id() ? 'has-sub' : '' }} {{ $activeProjectId == $project->id ? 'active' : '' }}">
+                            class="sidebar-item {{ $project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id() ? 'has-sub' : '' }} {{ Request::is('projects/'.$project->id) ? 'active' : '' }} ">
                             <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link"
                                 style="display: block;">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
+
                             </a>
 
                             @if ($project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id())
-                                <ul class="submenu">
+                                <ul class="submenu ">
                                     @foreach ($project->tasks as $task)
                                         @if ($project->created_by == Auth::id() || $task->assigned_to == Auth::id())
-                                            <li class="submenu-item {{ $activeTaskId == $task->id ? 'active' : '' }}">
+                                            <li class="submenu-item {{ Request::is('task/'.$task->id) ? 'active' : '' }}">
                                                 <a href="{{ route('tasks.show', $task->id) }}"
                                                     class="submenu-link">{{ $task->title }}</a>
                                             </li>
@@ -124,6 +125,8 @@
                                 </ul>
                             @endif
                         </li>
+
+
 
                     @empty
                         <li class="sidebar-title text-secondary ">Kamu belum punya proyek</li>
