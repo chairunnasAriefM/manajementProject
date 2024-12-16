@@ -264,6 +264,36 @@
                                         </div>
                                     @endif
                                 </div>
+
+                                <!-- Modal Edit Komentar -->
+                                <div class="modal modal-xl fade" id="editCommentModal" tabindex="-1"
+                                    aria-labelledby="editCommentModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="editCommentForm" method="POST"
+                                                    action="{{ route('comments.update', $comment->id) }}">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="mb-3">
+                                                        <label for="editSummernote" class="form-label">Isi
+                                                            Komentar</label>
+                                                        <!-- Summernote Textarea -->
+                                                        <textarea id="editSummernote" name="content" class="form-control"></textarea>
+                                                    </div>
+                                                    <input type="hidden" id="commentId" name="commentId">
+                                                    <button type="submit" class="btn btn-primary">Perbarui
+                                                        Komentar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         @else
                             <p class="text-muted">Tidak ada komentar.</p>
@@ -271,33 +301,7 @@
                     </div>
 
 
-                    <!-- Modal Edit Komentar -->
-                    <div class="modal modal-xl fade" id="editCommentModal" tabindex="-1"
-                        aria-labelledby="editCommentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="editCommentForm" method="POST"
-                                        action="{{ route('comments.update', $comment->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="mb-3">
-                                            <label for="editSummernote" class="form-label">Isi Komentar</label>
-                                            <!-- Summernote Textarea -->
-                                            <textarea id="editSummernote" name="content" class="form-control"></textarea>
-                                        </div>
-                                        <input type="hidden" id="commentId" name="commentId">
-                                        <button type="submit" class="btn btn-primary">Perbarui Komentar</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
 
 
 
@@ -315,7 +319,7 @@
     <script src="{{ asset('mazer/extensions/summernote/summernote-lite.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // Inisialisasi Summernote
+            // Inisialisasi Summernote untuk tambah komentar
             $('#summernote').summernote({
                 height: 150,
                 placeholder: 'Tulis komentar Anda...',
@@ -326,21 +330,54 @@
                 ]
             });
 
-            // Saat form submit, pindahkan konten Summernote ke input tersembunyi
-            $('form').on('submit', function(e) {
-                const content = $('#summernote').summernote('code'); // Ambil isi dari Summernote
-                $('#content').val(content); // Set value input hidden
+            // Inisialisasi Summernote untuk modal edit komentar
+            $('#editSummernote').summernote({
+                height: 200,
+                tabsize: 2,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+
+            // Validasi tambah komentar
+            $('form#addCommentForm').on('submit', function(e) {
+                const content = $('#summernote').summernote('code').trim();
+                $('#content').val(content); // Pindahkan isi Summernote ke input hidden
+                if (!content || content === '<p><br></p>') {
+                    alert('Komentar tidak boleh kosong.');
+                    e.preventDefault();
+                }
+            });
+
+            // Buka modal edit komentar
+            $('#editCommentModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var commentId = button.data('id');
+                var commentContent = button.data('content');
+
+                // Update action URL form
+                var actionUrl = "{{ route('comments.update', ':id') }}".replace(':id', commentId);
+                $('#editCommentForm').attr('action', actionUrl);
+
+                // Set konten Summernote edit
+                $('#editSummernote').summernote('code', commentContent);
+            });
+
+            // Validasi edit komentar
+            $('form#editCommentForm').on('submit', function(e) {
+                const content = $('#editSummernote').summernote('code').trim();
+                $('#editContent').val(content); // Pindahkan isi Summernote ke input hidden
+                if (!content || content === '<p><br></p>') {
+                    alert('Komentar tidak boleh kosong.');
+                    e.preventDefault();
+                }
             });
         });
-
-        function validateCommentForm() {
-            const content = $('#content').val().trim();
-            if (!content) {
-                alert('Komentar tidak boleh kosong.');
-                return false;
-            }
-            return true;
-        }
     </script>
     <style>
         .comment-box {
@@ -482,37 +519,6 @@
                 altFormat: 'd F Y',
                 allowInput: true
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            // Inisialisasi Summernote untuk modal edit
-            $('#editSummernote').summernote({
-                height: 200,
-                tabsize: 2,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']]
-                ]
-            });
-
-            // Buka modal dan isi Summernote dengan konten yang ada
-            $('#editCommentModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var commentId = button.data('id');
-                var commentContent = button.data('content');
-
-                var actionUrl = "{{ route('comments.update', ':id') }}".replace(':id', commentId);
-                $('#editCommentForm').attr('action', actionUrl);
-
-                // Set konten Summernote
-                $('#editSummernote').summernote('code', commentContent);
-            });
-
         });
     </script>
 @endsection
