@@ -41,9 +41,11 @@
                                         @foreach ($projects as $project)
                                             <tr id="project-{{ $project->id }}">
                                                 <td class="text-bold-500">{{ $project->title }}</td>
-                                                <td>{{ $project->description }}</td>
-                                                <td>{{ $project->start_date }}</td>
-                                                <td>{{ $project->end_date }}</td>
+                                                <td>{{ Str::limit($project->description, 50) }} </td>
+                                                <td>{{ \Carbon\Carbon::parse($project->start_date)->translatedFormat('d F Y') }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($project->end_date)->translatedFormat('d F Y') }}
+                                                </td>
                                                 <td>
                                                     <span
                                                         class="badge {{ $project->status == 'completed' ? 'bg-success' : ($project->status == 'in_progress' ? 'bg-warning' : 'bg-secondary') }}">
@@ -76,7 +78,7 @@
                                                             <button type="button" class="btn-close btn-close-white"
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div class="modal-body">
+                                                        <div class="modal-body bg-body-secondary text-body">
                                                             <div class="row">
                                                                 <!-- Informasi Proyek -->
                                                                 <div class="col-md-6">
@@ -151,5 +153,3 @@
         </div>
     </section>
 @endsection
-
-
