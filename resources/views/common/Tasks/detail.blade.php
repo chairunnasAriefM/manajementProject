@@ -264,6 +264,34 @@
                                         </div>
                                     @endif
                                 </div>
+
+                                 <!-- Modal Edit Komentar -->
+                    <div class="modal modal-xl fade" id="editCommentModal" tabindex="-1"
+                    aria-labelledby="editCommentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editCommentForm" method="POST"
+                                    action="{{ route('comments.update', $comment->id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="mb-3">
+                                        <label for="editSummernote" class="form-label">Isi Komentar</label>
+                                        <!-- Summernote Textarea -->
+                                        <textarea id="editSummernote" name="content" class="form-control"></textarea>
+                                    </div>
+                                    <input type="hidden" id="commentId" name="commentId">
+                                    <button type="submit" class="btn btn-primary">Perbarui Komentar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                             @endforeach
                         @else
                             <p class="text-muted">Tidak ada komentar.</p>
@@ -271,33 +299,7 @@
                     </div>
 
 
-                    <!-- Modal Edit Komentar -->
-                    <div class="modal modal-xl fade" id="editCommentModal" tabindex="-1"
-                        aria-labelledby="editCommentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editCommentModalLabel">Edit Komentar</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="editCommentForm" method="POST"
-                                        action="{{ route('comments.update', $comment->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="mb-3">
-                                            <label for="editSummernote" class="form-label">Isi Komentar</label>
-                                            <!-- Summernote Textarea -->
-                                            <textarea id="editSummernote" name="content" class="form-control"></textarea>
-                                        </div>
-                                        <input type="hidden" id="commentId" name="commentId">
-                                        <button type="submit" class="btn btn-primary">Perbarui Komentar</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
 
 
 
