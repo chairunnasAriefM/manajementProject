@@ -58,7 +58,7 @@ class AuthController extends Controller
             return redirect('/dashboard')->with('success', 'Login successful!');
         }
 
-        return back()->withErrors(['login' => 'Invalid credentials'])->withInput();
+        return back()->with('error', 'Email atau password anda salah');
     }
 
     public function logout(Request $request)
@@ -66,6 +66,6 @@ class AuthController extends Controller
         Auth::logout();
         Cookie::queue(Cookie::forget('username'));
 
-        return redirect('/')->with('logout_success', 'Logout Berhasil!');
+        return redirect('/')->with('success', 'Logout Berhasil!');
     }
 }

@@ -104,11 +104,11 @@
 
                     @forelse  ($projects as $project)
                         <li
-                            class="sidebar-item {{ $project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id() ? 'has-sub' : '' }} {{ Request::is('projects/'.$project->id) ? 'active' : '' }} ">
+                            class="sidebar-item {{ $project->tasks->isNotEmpty() ? 'has-sub' : '' }} {{ Request::is('projects/'.$project->id) ? 'active' : '' }}">
                             <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link"
                                 style="display: block;">
                                 <i class="bi bi-folder-fill"></i>
-                                <span>{{ $project->title }}</span>
+                                <span>{{ $project->title }} </span>
 
                             </a>
 

@@ -69,12 +69,15 @@
                         <select class="choices form-select multiple-remove" id="members" name="members[]"
                             multiple="multiple" required>
                             <optgroup label="Anggota">
-                                @foreach ($users as $user)
+                                @foreach ($users->filter(function ($user) {
+            return !in_array($user->role, ['leader', 'admin']);
+        }) as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->role }})</option>
                                 @endforeach
+
                             </optgroup>
                         </select>
-                    </div>
+                </div>
 
 
 

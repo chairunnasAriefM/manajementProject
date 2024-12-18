@@ -41,10 +41,10 @@
                                     <p class="text-center text-gray-500">Tidak ada notifikasi.</p>
                                 </li>
                             @endforelse
-                            <li>
+                            {{-- <li>
                                 <p class="text-center py-2 mb-0"><a href="#">Lihat
                                         semua notifikasi</a></p>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
 

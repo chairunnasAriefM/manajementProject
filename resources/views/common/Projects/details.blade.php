@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('title', 'Detail Proyek')
+
 @section('content')
     <div class="container py-5">
         <div class="row">
@@ -8,10 +10,15 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h3 class="card-title text-primary fw-bold">{{ $project->title }}</h3>
-                        <p class="card-text text-muted ">
+                        <p class="card-text text-muted">
                             <strong>Deskripsi:</strong>
-                            {{ \Illuminate\Support\Str::limit($project->description, 150, '...') }}
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#descriptionModal">Lihat Selengkapnya</a>
+                            @if (strlen($project->description) > 150)
+                                {{ \Illuminate\Support\Str::limit($project->description, 150, '...') }}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#descriptionModal">Lihat
+                                    Selengkapnya</a>
+                            @else
+                                {{ $project->description }}
+                            @endif
                         </p>
 
                         <!-- Modal -->

@@ -319,7 +319,7 @@
     <script src="{{ asset('mazer/extensions/summernote/summernote-lite.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // Inisialisasi Summernote untuk tambah komentar
+            // Inisialisasi Summernote
             $('#summernote').summernote({
                 height: 150,
                 placeholder: 'Tulis komentar Anda...',
@@ -330,54 +330,14 @@
                 ]
             });
 
-            // Inisialisasi Summernote untuk modal edit komentar
-            $('#editSummernote').summernote({
-                height: 200,
-                tabsize: 2,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']]
-                ]
-            });
-
-            // Validasi tambah komentar
-            $('form#addCommentForm').on('submit', function(e) {
-                const content = $('#summernote').summernote('code').trim();
-                $('#content').val(content); // Pindahkan isi Summernote ke input hidden
-                if (!content || content === '<p><br></p>') {
-                    alert('Komentar tidak boleh kosong.');
-                    e.preventDefault();
-                }
-            });
-
-            // Buka modal edit komentar
-            $('#editCommentModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var commentId = button.data('id');
-                var commentContent = button.data('content');
-
-                // Update action URL form
-                var actionUrl = "{{ route('comments.update', ':id') }}".replace(':id', commentId);
-                $('#editCommentForm').attr('action', actionUrl);
-
-                // Set konten Summernote edit
-                $('#editSummernote').summernote('code', commentContent);
-            });
-
-            // Validasi edit komentar
-            $('form#editCommentForm').on('submit', function(e) {
-                const content = $('#editSummernote').summernote('code').trim();
-                $('#editContent').val(content); // Pindahkan isi Summernote ke input hidden
-                if (!content || content === '<p><br></p>') {
-                    alert('Komentar tidak boleh kosong.');
-                    e.preventDefault();
-                }
+            // Saat form submit, pindahkan konten Summernote ke input tersembunyi
+            $('form').on('submit', function(e) {
+                const content = $('#summernote').summernote('code'); // Ambil isi dari Summernote
+                $('#content').val(content); // Set value input hidden
             });
         });
+
+       
     </script>
     <style>
         .comment-box {
@@ -520,5 +480,37 @@
                 allowInput: true
             });
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Summernote untuk modal edit
+            $('#editSummernote').summernote({
+                height: 200,
+                tabsize: 2,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+
+            // Buka modal dan isi Summernote dengan konten yang ada
+            $('#editCommentModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var commentId = button.data('id');
+                var commentContent = button.data('content');
+
+                var actionUrl = "{{ route('comments.update', ':id') }}".replace(':id', commentId);
+                $('#editCommentForm').attr('action', actionUrl);
+
+                // Set konten Summernote
+                $('#editSummernote').summernote('code', commentContent);
+            });
+
+        });
+
     </script>
 @endsection

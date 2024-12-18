@@ -21,6 +21,7 @@
     <!-- Nepcha Analytics (nepcha.com) -->
     <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
     <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+    <link rel="stylesheet" href="{{ asset('mazer/extensions/sweetalert2/sweetalert2.min.css') }}">
 </head>
 
 <body class="">
@@ -67,7 +68,7 @@
                         <div class="col-md-6">
                             <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
                                 <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
-                                    style="background-image:url('assets/img/curved-images/curved6.jpg')"></div>
+                                    style="background-image:url('assets/img/bg2.jpg')"></div>
                             </div>
                         </div>
                     </div>
@@ -79,14 +80,14 @@
     <footer class="footer py-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 mb-4 mx-auto text-center">
+                {{-- <div class="col-lg-8 mb-4 mx-auto text-center">
                     <a href="javascript:;" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
                         About Us
                     </a>
                     <a href="javascript:;" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
                         Team
                     </a>
-                </div>
+                </div> --}}
                 <div class="col-lg-8 mx-auto text-center mb-4 mt-2">
                     <a href="javascript:;" target="_blank" class="text-secondary me-xl-4 me-4">
                         <span class="text-lg fab fa-dribbble"></span>
@@ -158,3 +159,33 @@
 </body>
 
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                toast: true,
+                position: 'center',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                html: '{{ session('error') }}',
+                toast: true,
+                position: 'center',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
+        @endif
+    });
+</script>

@@ -184,16 +184,7 @@
                                                                                         id="members-{{ $project->id }}"
                                                                                         name="members[]" multiple required>
                                                                                         <optgroup label="Pilih Anggota">
-                                                                                            @foreach ($users as $user)
-                                                                                                @if (!in_array($user->role, ['admin', 'leader']))
-                                                                                                    <option
-                                                                                                        value="{{ $user->id }}"
-                                                                                                        {{ $project->members->contains($user->id) ? 'selected' : '' }}>
-                                                                                                        {{ $user->name }}
-                                                                                                        ({{ $user->role }})
-                                                                                                    </option>
-                                                                                                @endif
-                                                                                            @endforeach
+                                                                                           l
                                                                                         </optgroup>
                                                                                     </select>
                                                                                 </div>

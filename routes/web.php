@@ -15,9 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\NotificationController;
 
-Route::get('/', function () {
-    return view('auth.index');
-});
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/tes', function () {
