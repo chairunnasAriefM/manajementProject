@@ -55,18 +55,21 @@
                                                 <td>
                                                     <div class="d-flex">
                                                         <!-- Show Modal -->
-                                                        <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal"
+                                                        {{-- <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal"
                                                             data-bs-target="#projectModal{{ $project->id }}">
                                                             <i class="bi bi-eye"></i>
-                                                        </button>
+                                                        </button> --}}
+                                                        <a href="{{ route('projects.show', $project->id) }}"
+                                                            class="btn btn-sm btn-info me-2">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
 
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <div class="modal fade" id="projectModal{{ $project->id }}" tabindex="-1"
-                                                aria-labelledby="projectModalLabel{{ $project->id }}"
-                                                aria-hidden="true">
+                                                aria-labelledby="projectModalLabel{{ $project->id }}" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered modal-lg">
                                                     <div class="modal-content border-0 shadow-lg">
                                                         <div class="modal-header bg-primary text-white">

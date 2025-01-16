@@ -20,13 +20,20 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'role' => 'admin',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('123'),
+            'password' => Hash::make('qwe'),
         ]);
 
         User::factory()->create([
             'name' => 'user',
             'role' => 'programmer',
             'email' => 'user@gmail.com',
-            'password' => Hash::make('123'),
+            'password' => Hash::make('qwe'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'leader',
+            'role' => 'leader',
+            'email' => 'leader@gmail.com',
+            'password' => Hash::make('qwe'),
         ]);
     }}

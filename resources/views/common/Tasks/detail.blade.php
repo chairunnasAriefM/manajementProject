@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('title', 'Detail Tugas')
+
 @section('content')
     <div class="container py-5">
         <!-- Task Detail Card -->
@@ -337,7 +339,7 @@
             });
         });
 
-       
+
     </script>
     <style>
         .comment-box {
