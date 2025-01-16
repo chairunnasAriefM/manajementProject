@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $role = $user->role;
 
         // Data umum
-        $totalProjects = Project::count();
+        $totalAllProjects = Project::count();
         $totalTasks = Task::count();
         $activeUsers = User::online()->count();
         $activeUsersData = User::online()->get();
@@ -120,7 +120,10 @@ class DashboardController extends Controller
             'tugasPending' => $tugasPending,
             'totalProjects' => $totalProjects,
             'inProgressTasks' => $inProgressTasks,
-            'pendingTasks' => $pendingTasks
+            'pendingTasks' => $pendingTasks,
+
+            // admin
+            'totalAllProjects' => $totalAllProjects
         ]);
     }
 
