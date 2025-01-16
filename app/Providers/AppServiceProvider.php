@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 // Ambil notifikasi terbaru
                 $notifications = Notification::where('user_id', $user->id)
                     ->orderBy('created_at', 'desc')
-                    ->take(7) // Batas jumlah notifikasi yang ditampilkan
+                    ->take(4) // Batas jumlah notifikasi yang ditampilkan
                     ->get();
 
                 // Hitung jumlah notifikasi yang belum dibaca
@@ -48,6 +48,6 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        
+
     }
 }
