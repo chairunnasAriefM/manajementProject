@@ -192,11 +192,10 @@ class ProjectController extends Controller
                 return $query->where('title', 'like', '%' . $search . '%');
             })
             ->whereHas('members', function ($query) use ($userId) {
-                $query->where('users.id', $userId);  // Tentukan nama tabel untuk kolom id
+                $query->where('users.id', $userId); 
             })
             ->paginate(10);
 
-        // Dapatkan data pengguna (jika diperlukan di view)
         $users = User::all();
 
         return view('common.Projects.list_projects', compact('projects', 'users'));

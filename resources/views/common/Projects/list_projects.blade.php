@@ -13,7 +13,7 @@
                     <div class="card-content">
                         <div class="table-responsive p-3">
                             <!-- Form Pencarian -->
-                            <form action="{{ route('showProjects') }}" method="GET" class="mb-3">
+                            <form action="{{ route('showProjectsCommon') }}" method="GET" class="mb-3">
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" placeholder="Cari proyek..."
                                         value="{{ request('search') }}">

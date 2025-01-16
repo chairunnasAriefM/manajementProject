@@ -24,7 +24,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index']);
 
-    Route::resource('projects', ProjectController::class);
+    Route::resource('projects', ProjectController::class)->except('index');
     Route::get('/showProjects', [ProjectController::class, 'perLeader'])->name('showProjects');
     Route::post('/project/{projectId}/remove-member', [ProjectController::class, 'removeMember']);
     Route::get('/showProjectsCommon', [ProjectController::class, 'other'])->name('showProjectsCommon');
@@ -69,6 +69,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
     // manage Project
     Route::get('/projectsAll',[ProjectController::class,'index'])->name('showProjectsAdmin');
+    Route::post('/projectsAll',[ProjectController::class,'index'])->name('searchProjectsAdmin');
     // Route::resource('projects', ProjectController::class)->except(['create','show','edit']);
 });
 
