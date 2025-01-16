@@ -47,9 +47,11 @@
                                                 <td>{{ $user->email }}</td>
                                                 <td>
                                                     <span
-                                                        class="badge {{ $user->role == 'admin' ? 'bg-success' : 'bg-secondary' }}">
+                                                        class="badge
+                                                        {{ $user->role == 'leader' ? 'bg-success' : ($user->role == 'admin' ? 'bg-primary' : 'bg-secondary') }}">
                                                         {{ ucfirst($user->role) }}
                                                     </span>
+
                                                 </td>
                                                 <td>{{ $user->created_at->format('d M Y') }}</td>
                                                 <td>
