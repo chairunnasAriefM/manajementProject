@@ -72,7 +72,7 @@ class DashboardController extends Controller
                 'y' => $progress,       // Progress aktual
                 'goals' => [
                     [
-                        'name' => 'Expected',  // Progress yang diharapkan (contoh 100%)
+                        'name' => 'Expected',  
                         'value' => 100,
                         'strokeWidth' => 2,
                         'strokeDashArray' => 2,
