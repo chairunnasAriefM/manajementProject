@@ -10,8 +10,8 @@
     <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}" type="image/x-icon">
 
-    <link rel="stylesheet" href="mazer/compiled/css/app.css">
-    <link rel="stylesheet" href="mazer/compiled/css/error.css">
+    <link rel="stylesheet" href="{{ asset('mazer/compiled/css/app.cs') }}s">
+    <link rel="stylesheet" href="{{ asset("mazer/compiled/css/error.css") }}">
 </head>
 
 <body>
@@ -22,10 +22,10 @@
         <div class="error-page container">
             <div class="col-md-8 col-12 offset-md-2">
                 <div class="text-center">
-                    <img class="img-error" src="mazer/compiled/svg/error-403.svg" alt="Not Found">
+                    <img class="img-error" src="{{ asset('mazer/compiled/svg/error-403.svg') }}" alt="Not Found">
                     <h1 class="error-title">Terlarang</h1>
                     <p class="fs-5 text-gray-600">Hayooo kamu mau berbuat apa?</p>
-                    <a href="/login" class="btn btn-lg btn-outline-primary mt-3">Kembali</a>
+                    <a href="/dashboard" class="btn btn-lg btn-outline-primary mt-3">Kembali</a>
                 </div>
             </div>
         </div>
