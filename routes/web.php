@@ -68,6 +68,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::put('/updateuser/{id}', [AdminController::class, 'updateUser'])->name('updateuser');
 
     // manage Project
+    Route::get('/projectsAll',[ProjectController::class,'index'])->name('showProjectsAdmin');
     // Route::resource('projects', ProjectController::class)->except(['create','show','edit']);
 });
 

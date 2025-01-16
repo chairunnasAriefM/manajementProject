@@ -137,14 +137,14 @@
                 @if (Auth::user()->role == 'admin')
                     <li
                         class="sidebar-item {{ Request::is('showuser*') || Request::is('addnewuser') ? 'active' : '' }}">
-                        <a href="showuser" class='sidebar-link'>
+                        <a href="{{ route('showuser') }}" class='sidebar-link'>
                             <i class="bi bi-people-fill"></i>
                             <span>Data User</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item {{ Request::is('projects') ? 'active' : '' }}">
-                        <a href="projects" class='sidebar-link'>
+                        <a href="{{ route('showProjectsAdmin') }}" class='sidebar-link'>
                             <i class="bi bi-folder"></i>
                             <span>Data Project</span>
                         </a>
