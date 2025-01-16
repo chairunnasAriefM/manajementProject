@@ -73,7 +73,7 @@
                         </li>
                         <li>
                             <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#profileModal">
-                                <i class="icon-mid bi bi-person me-2"></i> My Profile
+                                <i class="icon-mid bi bi-person me-2"></i> Profil Saya
                             </a>
                         </li>
                         <hr class="dropdown-divider">
