@@ -14,6 +14,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Middleware\EnsureUserIsPartOfProject;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
@@ -24,7 +25,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index']);
 
-    Route::resource('projects', ProjectController::class)->except('index');
+    Route::resource('projects', ProjectController::class)->except('index')->middleware(EnsureUserIsPartOfProject::class);
+    // Route::resource('projects', ProjectController::class)->except('index');
     Route::get('/showProjects', [ProjectController::class, 'perLeader'])->name('showProjects');
     Route::post('/project/{projectId}/remove-member', [ProjectController::class, 'removeMember']);
     Route::get('/showProjectsCommon', [ProjectController::class, 'other'])->name('showProjectsCommon');
@@ -58,8 +60,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::middleware([AdminMiddleware::class])->group(function () {
-
-
     // manage user
     Route::get('/showuser', [AdminController::class, 'showUser'])->name('showuser');
     Route::get('/addnewuser', [AdminController::class, 'showAddnewUserForm'])->name('addnewuser');
