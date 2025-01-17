@@ -47,7 +47,7 @@
                                         <img src="{{ asset('storage/' . $member->avatar) }}" alt="">
                                     </div>
                                     <div>
-                                        <p class="mb-0 fw-bold">{{ $member->name }}</p>
+                                        <p class="mb-0 fw-bold">{{ ucfirst($member->name) }}</p>
                                         <small class="text-muted">{{ $member->email }}</small>
                                     </div>
                                 </li>

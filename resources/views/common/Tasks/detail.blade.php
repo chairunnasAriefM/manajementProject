@@ -58,9 +58,14 @@
                 <div class="mt-4">
                     @if (auth()->user()->id === $task->project->created_by)
                         <div>
+
+                            @if ($task->status=='in_progress')
                             <button class="btn btn-success me-2" id="mark-completed-button"><i
-                                    class="bi bi-check2-square"></i> Tandai sebagai
-                                Selesai</button>
+                                class="bi bi-check2-square"></i> Tandai sebagai
+                            Selesai</button>
+                            @endif
+
+
                             <button class="btn btn-primary me-2" id="add-time-button"><i class="bi bi-alarm"></i> Tambahkan
                                 Waktu</button>
                             <button class="btn btn-warning me-2 " id="update-task-button" data-bs-toggle="modal"
