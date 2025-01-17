@@ -89,35 +89,42 @@
                     @php
                         $projects = \App\Models\Project::where(function ($query) {
                             $query->where('created_by', Auth::id())->orWhereHas('members', function ($subQuery) {
-                                $subQuery->where('user_id', Auth::id());
+                                $subQuery->where('user_id', Auth::id())->whereNotIn('status', ['completed']);
                             });
                         })
-                            ->with(['tasks.assignee'])
+                            ->with([
+                                'tasks' => function ($query) {
+                                    $query->whereNotIn('status', ['completed'])->with('assignee');
+                                },
+                            ])
                             ->get();
-
                     @endphp
 
                     @forelse ($projects as $project)
+                        @php
+                            $visibleTasks = $project->tasks->filter(function ($task) use ($project) {
+                                return $project->created_by == Auth::id() || $task->assigned_to == Auth::id();
+                            });
+                        @endphp
+
                         <li
-                            class="sidebar-item {{ $project->tasks->isNotEmpty() ? 'has-sub' : '' }}
-    {{ Request::is('projects/' . $project->id) || (Request::is('tasks/*') && $project->tasks->pluck('id')->contains(Request::segment(2))) ? 'active' : '' }}">
+                            class="sidebar-item {{ $visibleTasks->isNotEmpty() ? 'has-sub' : '' }}
+            {{ Request::is('projects/' . $project->id) || (Request::is('tasks/*') && $project->tasks->pluck('id')->contains(Request::segment(2))) ? 'active' : '' }}">
                             <a href="{{ route('projects.show', $project->id) }}" class="sidebar-link"
                                 style="display: block;">
                                 <i class="bi bi-folder-fill"></i>
                                 <span>{{ $project->title }}</span>
                             </a>
 
-                            @if ($project->tasks->where('assigned_to', Auth::id())->isNotEmpty() || $project->created_by == Auth::id())
+                            @if ($visibleTasks->isNotEmpty())
                                 <ul
                                     class="submenu {{ Request::is('tasks/*') && $project->tasks->pluck('id')->contains(Request::segment(2)) ? 'active submenu-open' : '' }}">
-                                    @foreach ($project->tasks as $task)
-                                        @if ($project->created_by == Auth::id() || $task->assigned_to == Auth::id())
-                                            <li
-                                                class="submenu-item {{ Request::is('tasks/' . $task->id) ? 'active' : '' }}">
-                                                <a href="{{ route('tasks.show', $task->id) }}"
-                                                    class="submenu-link">{{ $task->title }}</a>
-                                            </li>
-                                        @endif
+                                    @foreach ($visibleTasks as $task)
+                                        <li
+                                            class="submenu-item {{ Request::is('tasks/' . $task->id) ? 'active' : '' }}">
+                                            <a href="{{ route('tasks.show', $task->id) }}"
+                                                class="submenu-link">{{ $task->title }}</a>
+                                        </li>
                                     @endforeach
                                 </ul>
                             @endif
