@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
 use App\Models\Notification;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use App\Http\Controllers\NotificationController;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
             if (auth()->check()) { // Pastikan pengguna sudah login
                 $user = auth()->user();
 
+                // due date notification checker
+                $notificationController = new NotificationController();
+                $notificationController->checkDueDate();
+
                 // Ambil notifikasi terbaru
                 $notifications = Notification::where('user_id', $user->id)
                     ->orderBy('created_at', 'desc')
@@ -41,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
                 $unreadNotificationsCount = Notification::where('user_id', $user->id)
                     ->where('is_read', false)
                     ->count();
+
+
 
 
                 // Bagikan data ke semua view

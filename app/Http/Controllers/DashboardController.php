@@ -6,10 +6,11 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Project;
 use App\Models\Notification;
-use App\Models\ProjectMember;
 use Illuminate\Http\Request;
+use App\Models\ProjectMember;
 use Illuminate\Support\Facades\Auth;
 use Shetabit\Visitor\Traits\Visitor;
+use App\Http\Controllers\NotificationController;
 
 class DashboardController extends Controller
 {
@@ -18,10 +19,6 @@ class DashboardController extends Controller
         // visitor()->visit();
         $user = Auth::user();
         $role = $user->role;
-
-        // due date notification checker
-        $notificationController = new NotificationController();
-        $notificationController->checkDueDate();
 
         // Data umum
         $totalAllProjects = Project::count();
