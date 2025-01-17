@@ -25,8 +25,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index']);
 
-    Route::resource('projects', ProjectController::class)->except('index')->middleware(EnsureUserIsPartOfProject::class);
-    // Route::resource('projects', ProjectController::class)->except('index');
+    // Route::resource('projects', ProjectController::class)->except('index')->middleware(EnsureUserIsPartOfProject::class);
+    Route::resource('projects', ProjectController::class)->except('index','show');
+    Route::get('projects/{project}', [ProjectController::class, 'show'])->name('projects.show')->middleware(EnsureUserIsPartOfProject::class);
+
+
     Route::get('/showProjects', [ProjectController::class, 'perLeader'])->name('showProjects');
     Route::post('/project/{projectId}/remove-member', [ProjectController::class, 'removeMember']);
     Route::get('/showProjectsCommon', [ProjectController::class, 'other'])->name('showProjectsCommon');
