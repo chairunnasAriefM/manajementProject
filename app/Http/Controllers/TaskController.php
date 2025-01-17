@@ -14,7 +14,7 @@ class TaskController extends Controller
     {
         $task = Task::with(['assignees', 'project'])->findOrFail($id);
 
-        return view('tasks.details', compact('task'));
+        return view('tasks.details', compact('task'));  
     }
     /**
      * Display a listing of the resource.

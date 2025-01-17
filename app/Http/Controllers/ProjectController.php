@@ -70,7 +70,7 @@ class ProjectController extends Controller
                 Notification::create([
                     'user_id' => $userId,
                     'message' => "Anda telah ditambahkan ke proyek '{$project->title}'.",
-                    'type' => 'project_member_added',
+                    'type' => 'projects',
                     'reference_id' => $project->id,
                 ]);
             }
@@ -192,7 +192,7 @@ class ProjectController extends Controller
                 return $query->where('title', 'like', '%' . $search . '%');
             })
             ->whereHas('members', function ($query) use ($userId) {
-                $query->where('users.id', $userId); 
+                $query->where('users.id', $userId);
             })
             ->paginate(10);
 

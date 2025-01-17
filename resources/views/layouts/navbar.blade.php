@@ -24,7 +24,9 @@
                             </li>
                             @forelse ($notifications as $notification)
                                 <li class="dropdown-item notification-item">
-                                    <a class="d-flex align-items-center" href="{{ $notification->url ?? '#' }}">
+                                    <a class="d-flex align-items-center"
+                                        href="{{ isset($notification->type) && isset($notification->reference_id) ?
+                                         url($notification->type . '/' . $notification->reference_id) : '#' }}">
                                         <div class="notification-icon bg-primary">
                                             <i class="bi bi-info-circle"></i>
                                         </div>

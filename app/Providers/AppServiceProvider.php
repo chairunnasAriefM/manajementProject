@@ -35,10 +35,13 @@ class AppServiceProvider extends ServiceProvider
                     ->take(4) // Batas jumlah notifikasi yang ditampilkan
                     ->get();
 
+
+
                 // Hitung jumlah notifikasi yang belum dibaca
                 $unreadNotificationsCount = Notification::where('user_id', $user->id)
                     ->where('is_read', false)
                     ->count();
+
 
                 // Bagikan data ke semua view
                 $view->with([
@@ -47,7 +50,5 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
-
-
     }
 }

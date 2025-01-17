@@ -34,7 +34,7 @@ class EnsureUserIsPartOfProject
         }
 
         // Validasi jika user bukan bagian dari proyek
-        if (!$project->members->contains('id', $user->id)) {
+        if (!$project->members->contains('id', $user->id) && !$project->created_by == $user->id) {
             abort(403, 'You are not authorized to access this project.');
         }
 

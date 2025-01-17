@@ -49,6 +49,8 @@ class CommentController extends Controller
             Notification::create([
                 'user_id' => $task->assigned_to,
                 'message' => "Komentar baru pada tugas \"{$task->title}\".",
+                'type' => 'tasks',
+                'reference_id' => $task->id
             ]);
         }
 
@@ -57,6 +59,8 @@ class CommentController extends Controller
             Notification::create([
                 'user_id' => $task->project->created_by,
                 'message' => "Komentar baru pada tugas \"{$task->title}\".",
+                'type' => 'tasks',
+                'reference_id' => $task->id
             ]);
         }
 

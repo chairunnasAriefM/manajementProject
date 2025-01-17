@@ -19,6 +19,10 @@ class DashboardController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
+        // due date notification checker
+        $notificationController = new NotificationController();
+        $notificationController->checkDueDate();
+
         // Data umum
         $totalAllProjects = Project::count();
         $totalTasks = Task::count();
@@ -72,7 +76,7 @@ class DashboardController extends Controller
                 'y' => $progress,       // Progress aktual
                 'goals' => [
                     [
-                        'name' => 'Expected',  
+                        'name' => 'Expected',
                         'value' => 100,
                         'strokeWidth' => 2,
                         'strokeDashArray' => 2,
@@ -136,4 +140,6 @@ class DashboardController extends Controller
 
         return view('users', compact('users'));
     }
+
+
 }
