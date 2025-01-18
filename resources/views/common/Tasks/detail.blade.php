@@ -66,8 +66,12 @@
                             @endif
 
 
-                            <button class="btn btn-primary me-2" id="add-time-button"><i class="bi bi-alarm"></i> Tambahkan
-                                Waktu</button>
+                            @if ($task->status != 'completed')
+                                <button class="btn btn-primary me-2" id="add-time-button"><i class="bi bi-alarm"></i>
+                                    Tambahkan
+                                    Waktu</button>
+                            @endif
+
                             <button class="btn btn-warning me-2 " id="update-task-button" data-bs-toggle="modal"
                                 data-bs-target="#editTaskModal"><i class="bi bi-pencil-square text-white"></i>
                                 <div class="text-white" style="display: inline-block;">Edit Tugas</div>
@@ -157,8 +161,12 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-danger" id="delete-task-button"><i class="bi bi-trash"></i> Hapus
-                                Tugas</button>
+                            @if ($task->status != 'completed')
+                                <button class="btn btn-danger" id="delete-task-button"><i class="bi bi-trash"></i> Hapus
+                                    Tugas</button>
+                            @endif
+
+
                         </div>
                     @elseif(auth()->user()->id === $task->assigned_to)
                         @if ($task->status === 'completed')
