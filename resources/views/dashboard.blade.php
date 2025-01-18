@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="text-muted font-semibold">Total Tugas</h6>
+                                            <h6 class="text-muted font-semibold">Total User</h6>
                                             <h6 class="font-extrabold mb-0">{{ $totalTasks }}</h6>
                                         </div>
                                     </div>
@@ -56,7 +56,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="text-muted font-semibold">Pengguna Online</h6>
+                                            <h6 class="text-muted font-semibold">User Online</h6>
                                             <h6 class="font-extrabold mb-0">{{ $activeUsers }}</h6>
                                         </div>
                                     </div>
@@ -85,9 +85,9 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h4>Daftar Pengguna Online</h4>
+                                    <h4>Daftar User Online</h4>
                                     <input type="text" id="searchUser" class="form-control w-25"
-                                        placeholder="Cari pengguna...">
+                                        placeholder="Cari user...">
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">

@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="card-title mb-0">Project Management</h4>
+                        <h4 class="card-title mb-0">Daftar Proyek</h4>
                     </div>
                     <div class="card-content">
                         <div class="table-responsive p-3">

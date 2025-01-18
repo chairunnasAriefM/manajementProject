@@ -59,7 +59,7 @@
                     <li class="sidebar-item {{ Request::is('showProjects') ? 'active' : '' }}">
                         <a href="{{ route('showProjects') }}" class='sidebar-link'>
                             <i class="bi bi-folder2-open"></i>
-                            <span>List Project Saya</span>
+                            <span>List Proyek Saya</span>
                         </a>
                     </li>
                 @endif
@@ -68,7 +68,7 @@
                     <li class="sidebar-item {{ Request::is('showProjectsCommon') ? 'active' : '' }}">
                         <a href="{{ route('showProjectsCommon') }}" class='sidebar-link'>
                             <i class="bi bi-folder2-open"></i>
-                            <span>List Project Saya</span>
+                            <span>List Proyek Saya</span>
                         </a>
                     </li>
                 @endif
@@ -81,20 +81,20 @@
                         <li class="sidebar-item {{ Request::is('projects/create') ? 'active' : '' }}">
                             <a href="/projects/create" class='sidebar-link'>
                                 <i class="bi bi-folder-plus"></i>
-                                <span>Tambah Project</span>
+                                <span>Tambah Proyek</span>
                             </a>
                         </li>
                     @endif
 
                     @php
                         $projects = \App\Models\Project::where(function ($query) {
-                            $query->where('created_by', Auth::id())->orWhereHas('members', function ($subQuery) {
-                                $subQuery->where('user_id', Auth::id())->whereNotIn('status', ['completed']);
+                            $query->where('created_by', Auth::id())->whereNotIn('status', ['completed','on_hold'])->orWhereHas('members', function ($subQuery) {
+                                $subQuery->where('user_id', Auth::id())->whereNotIn('status', ['completed','on_hold']);
                             });
                         })
                             ->with([
                                 'tasks' => function ($query) {
-                                    $query->whereNotIn('status', ['completed'])->with('assignee');
+                                    $query->whereNotIn('status', ['completed','on_hold'])->with('assignee');
                                 },
                             ])
                             ->get();
@@ -130,7 +130,7 @@
                             @endif
                         </li>
                     @empty
-                        <li class="sidebar-title text-secondary">Kamu belum punya proyek</li>
+                        <li class="sidebar-title text-secondary">Kamu belum punya proyek Aktif</li>
                     @endforelse
 
 
@@ -150,10 +150,10 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ Request::is('projects') ? 'active' : '' }}">
+                    <li class="sidebar-item {{ Request::is('projects*') ? 'active' : '' }}">
                         <a href="{{ route('showProjectsAdmin') }}" class='sidebar-link'>
                             <i class="bi bi-folder"></i>
-                            <span>Data Project</span>
+                            <span>Data Proyek</span>
                         </a>
                     </li>
                 @endif
