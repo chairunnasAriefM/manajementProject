@@ -59,10 +59,10 @@
                     @if (auth()->user()->id === $task->project->created_by)
                         <div>
 
-                            @if ($task->status=='in_progress')
-                            <button class="btn btn-success me-2" id="mark-completed-button"><i
-                                class="bi bi-check2-square"></i> Tandai sebagai
-                            Selesai</button>
+                            @if ($task->status == 'in_progress')
+                                <button class="btn btn-success me-2" id="mark-completed-button"><i
+                                        class="bi bi-check2-square"></i> Tandai sebagai
+                                    Selesai</button>
                             @endif
 
 
@@ -219,6 +219,8 @@
             </div>
         </div>
 
+
+
         <!-- Comments Section -->
         @if (auth()->user()->id === $task->project->created_by || auth()->user()->id === $task->assigned_to)
             <div class="mt-5">
@@ -236,40 +238,63 @@
                         </button>
                     </form>
 
+                    {{-- <section class="section">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Default Editor</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="summernote"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <script src="{{ asset(mazer/extensions/summernote/summernote-lite.min.js) }}"></script>
+                    <script src="{{ mazer/static/js/pages/summernote.j }}s"></script> --}}
 
                     <!-- Display Comments -->
                     <div class="mt-4">
                         @if ($task->comments && $task->comments->count())
                             @foreach ($task->comments->sortByDesc('created_at') as $comment)
                                 <div class="card p-3 mt-2 shadow-sm">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="user d-flex flex-row align-items-center">
-                                            <!-- Perbaikan Avatar -->
-                                            <img src="{{ asset('storage/' . $comment->user->avatar) }}" width="40"
-                                                height="40" class="user-img rounded-circle me-2 object-fit-cover">
-                                            <span>
-                                                <small
-                                                    class="font-weight-bold text-primary">{{ $comment->user->name }}</small>
-                                                <p class="mb-0">{!! $comment->content !!}</p>
-                                            </span>
-                                        </div>
-                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                                    </div>
+                                    <div class="d-flex align-items-start">
+                                        <!-- Avatar -->
+                                        <img src="{{ asset('storage/' . $comment->user->avatar) }}" width="40"
+                                            height="40" class="user-img rounded-circle me-3 object-fit-cover">
 
-                                    @if ($comment->user_id == Auth::user()->id)
-                                        <div class="d-flex justify-content-end mt-2">
-                                            <a href="#" class="text-info me-3" data-bs-toggle="modal"
-                                                data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
-                                                data-content="{{ $comment->content }}">Edit</a>
-                                            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST"
-                                                class="mb-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn text-danger p-0"
-                                                    style="none">Hapus</button>
-                                            </form>
+                                        <div class="flex-grow-1">
+                                            <!-- Nama dan Komentar -->
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <span
+                                                        class="font-weight-bold text-primary">{{ $comment->user->name }}</span>
+                                                    <p class="mb-1 text-break">{!! $comment->content !!}</p>
+                                                </div>
+                                                <!-- Waktu -->
+                                                <small
+                                                    class="text-muted ms-3">{{ $comment->created_at->diffForHumans() }}</small>
+                                            </div>
+
+                                            <!-- Tombol Aksi -->
+                                            @if ($comment->user_id == Auth::user()->id)
+                                                <div class="d-flex justify-content-end mt-2">
+                                                    <a href="#" class="text-info me-3" data-bs-toggle="modal"
+                                                        data-bs-target="#editCommentModal" data-id="{{ $comment->id }}"
+                                                        data-content="{{ $comment->content }}">Edit</a>
+                                                    <form action="{{ route('comments.destroy', $comment->id) }}"
+                                                        method="POST" class="mb-0">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn text-danger p-0"
+                                                            style="none">Hapus</button>
+                                                    </form>
+                                                </div>
+                                            @endif
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
 
                                 <!-- Modal Edit Komentar -->
@@ -312,6 +337,7 @@
 
 
 
+
                 </div>
             </div>
         @endif
@@ -334,6 +360,8 @@
                     ['style', ['bold', 'italic', 'underline', 'clear']],
                     ['font', ['fontsize', 'color']],
                     ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'table']],
+                    ['view', ['help']],
                 ]
             });
 
@@ -343,8 +371,6 @@
                 $('#content').val(content); // Set value input hidden
             });
         });
-
-
     </script>
     <style>
         .comment-box {
@@ -496,11 +522,10 @@
                 tabsize: 2,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
+                    ['font', ['fontsize', 'color']],
                     ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']]
+                    ['insert', ['link', 'picture', 'table']],
+                    ['view', ['help']],
                 ]
             });
 
@@ -518,6 +543,5 @@
             });
 
         });
-
     </script>
 @endsection
