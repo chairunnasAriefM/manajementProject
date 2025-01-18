@@ -424,19 +424,28 @@
                 title: 'Tambahkan Waktu',
                 html: `
             <label for="due-date-input" class="form-label">Pilih Tanggal Baru:</label>
-            <input type="date" id="due-date-input" class="form-control">
+            <input type="text" id="due-date-input" class="form-control datepicker" value="{{ $task->due_date }}">
         `,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Tambahkan!',
                 cancelButtonText: 'Batal',
+                didOpen: () => {
+                    // Inisialisasi Flatpickr setelah SweetAlert terbuka
+                    flatpickr('#due-date-input', {
+                        dateFormat: 'Y-m-d',
+                        altInput: true,
+                        altFormat: 'd F Y',
+                        allowInput: true,
+                    });
+                },
                 preConfirm: () => {
                     const dueDate = document.getElementById('due-date-input').value;
                     if (!dueDate) {
                         Swal.showValidationMessage('Tanggal harus diisi!');
                     }
                     return dueDate;
-                }
+                },
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Logika untuk mengirim tanggal baru ke server
@@ -444,32 +453,33 @@
                             method: "POST",
                             headers: {
                                 "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                                "Content-Type": "application/json"
+                                "Content-Type": "application/json",
                             },
                             body: JSON.stringify({
-                                due_date: result.value
-                            })
+                                due_date: result.value,
+                            }),
                         })
-                        .then(response => response.json())
-                        .then(data => {
+                        .then((response) => response.json())
+                        .then((data) => {
                             Swal.fire({
                                 title: data.success ? 'Berhasil!' : 'Gagal!',
                                 text: data.message,
-                                icon: data.success ? 'success' : 'error'
+                                icon: data.success ? 'success' : 'error',
                             }).then(() => {
                                 if (data.success) location.reload();
                             });
                         })
-                        .catch(error => {
+                        .catch((error) => {
                             Swal.fire({
                                 title: 'Error!',
                                 text: 'Terjadi kesalahan saat memperbarui tanggal.',
-                                icon: 'error'
+                                icon: 'error',
                             });
                         });
                 }
             });
         });
+
 
 
         // Konfirmasi SweetAlert2 untuk "Hapus Tugas"
