@@ -14,7 +14,7 @@ class TaskController extends Controller
     {
         $task = Task::with(['assignees', 'project'])->findOrFail($id);
 
-        return view('tasks.details', compact('task'));  
+        return view('tasks.details', compact('task'));
     }
     /**
      * Display a listing of the resource.
@@ -109,15 +109,24 @@ class TaskController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Anda tidak memiliki izin untuk menghapus tugas ini.',
-            ]);
+            ], 403);
         }
 
-        $task->delete();
+        try {
+            $projectId = $task->project_id;
+            $task->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Tugas berhasil dihapus.',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Tugas berhasil dihapus.',
+                'redirect_url' => route('projects.show', $projectId),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus tugas.',
+            ], 500);
+        }
     }
 
     public function addComment(Request $request, Task $task)

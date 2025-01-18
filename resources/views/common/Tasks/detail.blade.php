@@ -66,7 +66,7 @@
                             @endif
 
 
-                            @if ($task->status != 'completed')
+                            @if ($task->status == 'in_progress')
                                 <button class="btn btn-primary me-2" id="add-time-button"><i class="bi bi-alarm"></i>
                                     Tambahkan
                                     Waktu</button>
@@ -161,9 +161,52 @@
                                 </div>
                             </div>
 
+
                             @if ($task->status != 'completed')
-                                <button class="btn btn-danger" id="delete-task-button"><i class="bi bi-trash"></i> Hapus
-                                    Tugas</button>
+                                <button class="btn btn-danger" id="delete-task">
+                                    <i class="bi bi-trash"></i> Hapus Tugas
+                                </button>
+                                <script>
+                                    document.getElementById('delete-task').addEventListener('click', function() {
+                                        Swal.fire({
+                                            title: 'Konfirmasi',
+                                            text: 'Apakah Anda yakin ingin menghapus tugas ini?',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Ya, Hapus!',
+                                            cancelButtonText: 'Batal',
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                fetch("{{ route('tasks.delete', $task->id) }}", {
+                                                        method: "DELETE",
+                                                        headers: {
+                                                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                                            "Content-Type": "application/json"
+                                                        }
+                                                    })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        Swal.fire({
+                                                            title: data.success ? 'Berhasil!' : 'Gagal!',
+                                                            text: data.message,
+                                                            icon: data.success ? 'success' : 'error'
+                                                        }).then(() => {
+                                                            if (data.success) {
+                                                                window.location.href = data.redirect_url;
+                                                            }
+                                                        });
+                                                    })
+                                                    .catch(error => {
+                                                        Swal.fire({
+                                                            title: 'Error!',
+                                                            text: 'Terjadi kesalahan saat menghapus tugas.',
+                                                            icon: 'error'
+                                                        });
+                                                    });
+                                            }
+                                        });
+                                    });
+                                </script>
                             @endif
 
 
@@ -501,26 +544,36 @@
                 cancelButtonText: 'Batal',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Logika permintaan ke server untuk menghapus tugas
                     fetch("{{ route('tasks.delete', $task->id) }}", {
                             method: "DELETE",
                             headers: {
                                 "X-CSRF-TOKEN": "{{ csrf_token() }}",
                                 "Content-Type": "application/json"
                             }
-                        }).then(response => response.json())
+                        })
+                        .then(response => response.json())
                         .then(data => {
                             Swal.fire({
                                 title: data.success ? 'Berhasil!' : 'Gagal!',
                                 text: data.message,
                                 icon: data.success ? 'success' : 'error'
                             }).then(() => {
-                                if (data.success) location.reload();
+                                if (data.success) {
+                                    window.location.href = data.redirect_url;
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat menghapus tugas.',
+                                icon: 'error'
                             });
                         });
                 }
             });
         });
+
 
         // flatpicker
         document.addEventListener('DOMContentLoaded', function() {
