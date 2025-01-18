@@ -94,7 +94,7 @@ class ProjectController extends Controller
                 $query->where('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             })
-            ->get();
+            ->paginate(5);
 
         $members = $project->members;
 

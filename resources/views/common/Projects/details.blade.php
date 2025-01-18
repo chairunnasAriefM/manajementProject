@@ -69,8 +69,7 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center task-item">
                                     <div>
                                         <p class="mb-0 fw-bold">
-                                            <a href="{{ route('tasks.show', $task->id) }}"
-                                                class="text-decoration-none text-success">
+                                            <a href="{{ route('tasks.show', $task->id) }}" class="text-decoration-none text-success">
                                                 {{ $task->title }}
                                             </a>
                                         </p>
@@ -78,9 +77,9 @@
                                     </div>
                                     <span
                                         class="badge rounded-pill
-                                                {{ $task->status == 'in_progress' ? 'bg-warning' : '' }}
-                                                {{ $task->status == 'completed' ? 'bg-success' : '' }}
-                                                {{ $task->status == 'pending' ? 'bg-secondary' : '' }}">
+                                            {{ $task->status == 'in_progress' ? 'bg-warning' : '' }}
+                                            {{ $task->status == 'completed' ? 'bg-success' : '' }}
+                                            {{ $task->status == 'pending' ? 'bg-secondary' : '' }}">
                                         {{ ucfirst($task->status) }}
                                     </span>
                                 </li>
@@ -88,6 +87,12 @@
                                 <li class="list-group-item text-center text-muted">Tidak ada tugas ditemukan.</li>
                             @endforelse
                         </ul>
+
+                        <!-- Pagination Links -->
+                        <div class="mt-3">
+                            {{ $tasks->links() }}
+                        </div>
+
                     </div>
                 </div>
             </div>
