@@ -160,7 +160,7 @@
                             <select class="form-select choices" id="assignedTo" name="assigned_to" required>
                                 <option value="" selected disabled>Pilih anggota</option>
                                 @foreach ($members as $member)
-                                    <option value="{{ $member->id }}">{{ $member->name }}</option>
+                                    <option value="{{ $member->id }}">{{ $member->name }} - {{ ucfirst($member->role) }}</option>
                                 @endforeach
                             </select>
                         </div>
