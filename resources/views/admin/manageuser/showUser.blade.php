@@ -66,59 +66,79 @@
                                                             tabindex="-1"
                                                             aria-labelledby="showUserModalLabel{{ $user->id }}"
                                                             aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
                                                                 <div class="modal-content border-0 shadow-lg">
-                                                                    {{-- body --}}
+                                                                    <!-- Modal Header -->
                                                                     <div class="modal-header bg-primary text-white">
                                                                         <h5 class="modal-title text-white"
                                                                             id="showUserModalLabel{{ $user->id }}">
                                                                             <i class="bi bi-info-circle"></i> User Details:
-                                                                            {{ $user->name }}
+                                                                            <strong>{{ $user->name }}</strong>
                                                                         </h5>
                                                                         <button type="button"
                                                                             class="btn-close btn-close-white"
                                                                             data-bs-dismiss="modal"
                                                                             aria-label="Close"></button>
                                                                     </div>
+
+                                                                    <!-- Modal Body -->
                                                                     <div class="modal-body bg-body-secondary text-body">
                                                                         <div class="row">
-                                                                            <!-- Avatar User -->
-                                                                            @if ($user->avatar_path)
-                                                                                <div class="col-md-4 text-center">
-                                                                                    <img src="{{ asset($user->avatar_path) }}"
-                                                                                        alt="Avatar"
-                                                                                        class="img-fluid rounded-circle shadow">
-                                                                                </div>
-                                                                            @endif
-                                                                            <!-- Informasi User -->
-                                                                            <div
-                                                                                class="col-md-{{ $user->avatar_path ? '8' : '12' }}">
+                                                                            <!-- Avatar Section -->
+                                                                            <div class="col-md-4 text-center mb-4">
+                                                                                <h6 class="text-muted">Avatar</h6>
+                                                                                @if ($user->avatar)
+                                                                                    <img src="{{ asset('storage/' . $user->avatar) }}"
+                                                                                        alt="User Avatar"
+                                                                                        class="img-fluid rounded-circle shadow"
+                                                                                        style="width: 150px; height: 150px; object-fit: cover;">
+                                                                                @else
+                                                                                    <div class="placeholder-avatar rounded-circle shadow d-flex align-items-center justify-content-center"
+                                                                                        style="width: 150px; height: 150px; background-color: #f0f0f0;">
+                                                                                        <i class="bi bi-person-fill text-muted"
+                                                                                            style="font-size: 50px;"></i>
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
+
+
+                                                                            <!-- User Information Section -->
+                                                                            <div class="col-md-8">
                                                                                 <h6><i
                                                                                         class="bi bi-person-fill text-primary me-2"></i><strong>Name:</strong>
                                                                                 </h6>
                                                                                 <p>{{ $user->name }}</p>
+
                                                                                 <h6><i
                                                                                         class="bi bi-envelope-fill text-primary me-2"></i><strong>Email:</strong>
                                                                                 </h6>
                                                                                 <p>{{ $user->email }}</p>
+
                                                                                 <h6><i
                                                                                         class="bi bi-people-fill text-primary me-2"></i><strong>Role:</strong>
                                                                                 </h6>
                                                                                 <p>{{ ucfirst($user->role) }}</p>
+
                                                                                 <h6><i
                                                                                         class="bi bi-calendar-check-fill text-primary me-2"></i><strong>Created
                                                                                         At:</strong></h6>
-                                                                                <p>{{ $user->created_at }}</p>
+                                                                                <p>{{ $user->created_at->format('d M Y, H:i') }}
+                                                                                </p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+                                                                    <!-- Modal Footer -->
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Close</button>
+                                                                            data-bs-dismiss="modal">
+                                                                            <i class="bi bi-x-circle"></i> Close
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+
 
                                                         <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
                                                             data-bs-target="#editUserModal{{ $user->id }}"
@@ -152,7 +172,8 @@
                                                                         </div>
 
                                                                         <!-- Modal Body -->
-                                                                        <div class="modal-body bg-body-secondary text-body">
+                                                                        <div
+                                                                            class="modal-body bg-body-secondary text-body">
                                                                             <!-- Current Avatar -->
                                                                             <div class="text-center mb-4">
                                                                                 <h6 class="text-muted">Current Avatar</h6>
