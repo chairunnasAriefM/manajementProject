@@ -51,6 +51,8 @@ class TaskController extends Controller
         Notification::create([
             'user_id' => $requestData['assigned_to'],
             'message' => "Anda telah ditugaskan ke tugas \"{$task->title}\".",
+            'type' => 'tasks',
+            'reference_id' => $task->id
         ]);
 
 

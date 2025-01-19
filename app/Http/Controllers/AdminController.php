@@ -70,6 +70,7 @@ class AdminController extends Controller
             }
 
             $user->delete();
+            return back()->with('success', 'Data berhasil dihapus');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat menghapus data');
         }

@@ -385,7 +385,7 @@
         </div>
     @else
         <div class="page-heading">
-            <h3>Dashboard Admin</h3>
+            <h3>Dashboard Anggota</h3>
         </div>
         <div class="page-content">
             <section class="row">
