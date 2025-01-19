@@ -15,18 +15,24 @@
                         <a class="nav-link active dropdown-toggle text-gray-600" href="#"
                             data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                             <i class='bi bi-bell bi-sub fs-4'></i>
-                            <span class="badge badge-notification bg-danger">{{ $unreadNotificationsCount }}</span>
+
+                            @if ($unreadNotificationsCount != 0)
+                                <span class="badge badge-notification bg-danger">{{ $unreadNotificationsCount }}</span>
+                            @endif
+
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end notification-dropdown"
                             aria-labelledby="dropdownMenuButton">
                             <li class="dropdown-header">
                                 <h6>Notifikasi</h6>
                             </li>
+
                             @forelse ($notifications as $notification)
                                 <li class="dropdown-item notification-item">
                                     <a class="d-flex align-items-center"
-                                        href="{{ isset($notification->type) && isset($notification->reference_id) ?
-                                         url($notification->type . '/' . $notification->reference_id) : '#' }}">
+                                        href="{{ isset($notification->type) && isset($notification->reference_id)
+                                            ? url($notification->type . '/' . $notification->reference_id)
+                                            : '#' }}">
                                         <div class="notification-icon bg-primary">
                                             <i class="bi bi-info-circle"></i>
                                         </div>
